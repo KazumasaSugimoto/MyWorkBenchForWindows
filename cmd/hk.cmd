@@ -1,10 +1,11 @@
 @echo off
 
-if /i "%~1" equ "edit" goto EDIT
+for /f "usebackq tokens=1" %%a in (`echov --edit /edit :edit`) do if /i "%~1" equ "%%a" goto EDIT
 
-start /D"C:\Program Files\AutoHotkey\" AutoHotkey.exe
+rem start /D"C:\Program Files\AutoHotkey\" AutoHotkey.exe
+start "Launch AutoHotKey" /D"C:\Program Files\AutoHotkey\" AutoHotkeyU64_UIA.exe "%USERPROFILE%\Documents\AutoHotKey.ahk"
 goto :EOF
 
 :EDIT
-start notepad %~f0
+call code.cmd "%~f0"
 goto :EOF
