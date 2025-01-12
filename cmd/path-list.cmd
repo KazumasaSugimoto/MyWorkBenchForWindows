@@ -1,0 +1,1 @@
+@powershell $env:PATH -split ';'
