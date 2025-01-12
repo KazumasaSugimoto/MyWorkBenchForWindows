@@ -2,12 +2,13 @@
 rem このファイルの文字コードはShift-JISです。
 
 :BEGIN
-if /i "%1" equ ""     goto PROMPT
-if /i "%1" equ "edit" goto EDIT
-if /i "%1" equ "list" goto EDIT_LIST
+if /i "%~1" equ "" goto PROMPT
 
-for /F "skip=2 tokens=1,2*" %%a in ('find /i "%1" %~dpn0.lst') do (
-    if /i "%1" equ "%%a" (
+for /f "usebackq tokens=1" %%a in (`echov --edit /edit :edit`) do if /i "%~1" equ "%%a" goto EDIT_SELF
+for /f "usebackq tokens=1" %%a in (`echov --list /list :list`) do if /i "%~1" equ "%%a" goto EDIT_LIST
+
+for /f "usebackq eol=# tokens=1,2*" %%a in (`find /i "%~1" "%~dpn0.lst"`) do (
+    if /i "%~1" equ "%%a" (
         call :%%b_CASE "%%c"
     )    
 )
@@ -17,22 +18,22 @@ goto :EOF
 goto :EOF
 
 :DEFAULT_CASE
-start %~1
+start "Start" %~1
 goto :EOF
 
 :EXPLORER_CASE
-explorer %1
+explorer "%~1"
 goto :EOF
 
 :PROMPT
-set /p KEY="jump?>"
+set /p KEY="jump ? > "
 call j.cmd %KEY%
 goto :EOF
 
-:EDIT
-start notepad %~f0
+:EDIT_SELF
+call code.cmd "%~f0"
 goto :EOF
 
 :EDIT_LIST
-start notepad %~dpn0.lst
+call code.cmd "%~dpn0.lst"
 goto :EOF
