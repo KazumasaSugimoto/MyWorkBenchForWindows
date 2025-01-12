@@ -4,8 +4,8 @@ setlocal EnableDelayedExpansion
 
 set template_path=%~dpn0.form
 
-if /i "%1" equ "edit" goto EDIT_SELF
-if /i "%1" equ "form" goto EDIT_FORM
+for /f "usebackq tokens=1" %%a in (`echov --edit /edit :edit`) do if /i "%~1" equ "%%a" goto EDIT_SELF
+for /f "usebackq tokens=1" %%a in (`echov --form /form :form`) do if /i "%~1" equ "%%a" goto EDIT_FORM
 
 :SEARCH
 set cnt=0
