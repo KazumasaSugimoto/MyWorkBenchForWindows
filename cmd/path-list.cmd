@@ -1,1 +1,1 @@
-@powershell $env:PATH -split ';'
+@powershell $env:PATH -split ';' -ne ''
