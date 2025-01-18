@@ -15,7 +15,7 @@ if ($Alias   -eq '') { $Alias   = '\w+' } else { $Alias   = $Alias.Replace('*', 
 if ($Content -eq '') { $Content = '.*'  } else { $Content = $Content.Replace('*', '.*') }
 
 git config list --global |
-    Select-String "^alias\.($Alias)=($Content)" |
+    Select-String "^alias\.($Alias)=(.*($Content).*)" |
     ForEach-Object {
         [PSCustomObject]@{
             Alias   = $_.Matches[0].Groups[1]
