@@ -1,10 +1,11 @@
 @echo off
 
-rem pushd/popd helper
+rem pushd / popd helper
 
 if "%~1" equ ""  goto POPD_MODE
 if "%~1" equ "." goto TAGGING_MODE
 if "%~1" equ "/" goto TAG_REMOVE_MODE
+if "%~1" equ "?" goto HELP_MODE
 
 :PUSHD_MODE
 
@@ -62,5 +63,36 @@ if ERRORLEVEL 1 (
 
 set PD_TAGs[%~2]=
 echo "%~2" was removed.
+
+exit /b 0
+
+:HELP_MODE
+
+echo -------------------------------------------------------------------------------
+echo pushd / popd helper
+echo -------------------------------------------------------------------------------
+echo.
+echo usage:
+echo.
+echo     --- pushd mode ---
+echo.
+echo     %~n0[%~x0] destination
+echo         destination: folder path -^> tag name -^> environment variable name
+echo.
+echo     --- popd mode ---
+echo.
+echo     %~n0[%~x0]
+echo.
+echo     --- current directory tagging mode ---
+echo.
+echo     %~n0[%~x0] . tag-name
+echo.
+echo     --- tag remove mode ---
+echo.
+echo     %~n0[%~x0] / tag-name
+echo.
+echo     --- help mode ---
+echo.
+echo     %~n0[%~x0] ?
 
 exit /b 0
