@@ -19,6 +19,23 @@ if "%~1" equ "." (
     exit /b 0
 )
 
+if "%~1" equ "/" (
+    echo --- tag remove mode ---
+    if "%~2" equ "" (
+        echo usage:
+        echo     %~n0[%~x0] / tag-name
+        exit /b 1
+    )
+    set PD_TAGs[%~2] | findstr /b /i /l "PD_TAGs[%~2]="
+    if ERRORLEVEL 1 (
+        echo "%~2" was not found.
+        exit /b 1
+    )
+    set PD_TAGs[%~2]=
+    echo "%~2" was removed.
+    exit /b 0
+)
+
 setlocal EnableDelayedExpansion
 
 set DESTINATION=%~1
