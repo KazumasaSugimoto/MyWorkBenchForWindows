@@ -288,6 +288,7 @@ global mode := DEFAULT_MODE
 ;   \ |
 
 ;      >^\:: Send, {Esc}
+   <^<!<#\:: switchOrLaunchApplication("Compare", "BCompare.exe", "bc4.cmd")
 
 ;-----------------------
 ;   ; :
@@ -317,7 +318,8 @@ global mode := DEFAULT_MODE
 
        >^.:: Send,  {Tab}
 ;  <^<!<#.:: switchOrLaunchApplication("Command Shell", "cmd.exe", "%COMSPEC% /k cd ""%USERPROFILE%""")
-   <^<!<#.:: switchOrLaunchApplication("Command Shell", "cmd.exe", "cmd.exe /k cd ""%USERPROFILE%""")
+;  <^<!<#.:: switchOrLaunchApplication("Command Shell", "cmd.exe", "cmd.exe /k cd ""%USERPROFILE%""")
+   <^<!<#.:: switchOrLaunchApplication("Command Shell", "WindowsTerminal.exe", "wt.exe")
 ;      <^.:: Send,  {Tab}   ;; HINT Eclipse(Next Annotation)
 ;    <!<^.:: Send, !{Tab}
 
