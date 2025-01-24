@@ -2,4 +2,4 @@
 
 rem Get Git Alias
 
-powershell -File ggal.ps1 %*
+powershell -File %~n0.ps1 %*
