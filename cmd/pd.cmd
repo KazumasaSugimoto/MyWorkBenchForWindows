@@ -5,6 +5,7 @@ rem pushd / popd helper
 if "%~1" equ ""  goto POPD_MODE
 if "%~1" equ "." goto TAGGING_MODE
 if "%~1" equ "/" goto TAG_REMOVE_MODE
+if "%~1" equ ":" goto SUB_COMMAND_MODE
 if "%~1" equ "?" goto HELP_MODE
 
 :PUSHD_MODE
@@ -35,6 +36,7 @@ exit /b 0
 echo --- current directory tagging mode ---
 
 if "%~2" equ "" (
+    echo.
     echo usage:
     echo     %~n0[%~x0] . tag-name
     exit /b 1
@@ -50,6 +52,7 @@ exit /b 0
 echo --- tag remove mode ---
 
 if "%~2" equ "" (
+    echo.
     echo usage:
     echo     %~n0[%~x0] / tag-name
     exit /b 1
@@ -64,6 +67,24 @@ if ERRORLEVEL 1 (
 set PD_TAGs[%~2]=
 echo "%~2" was removed.
 
+exit /b 0
+
+:SUB_COMMAND_MODE
+
+echo --- sub-command mode ---
+
+if /i "%~2 %~3" equ "edit self" goto EDIT_SELF
+
+echo.
+echo usage:
+echo     %~n0[%~x0] : sub-command
+echo sub-command:
+echo     edit self
+exit /b 1
+
+:EDIT_SELF
+
+call code.cmd "%~f0"
 exit /b 0
 
 :HELP_MODE
