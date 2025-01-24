@@ -14,12 +14,14 @@ param (
 if ($Alias   -eq '') { $Alias   = '\w+' } else { $Alias   = $Alias.Replace('*', '\w*')  }
 if ($Content -eq '') { $Content = '.*'  } else { $Content = $Content.Replace('*', '.*') }
 
+# git config --list --global |
 git config list --global |
+    # findstr.exe /B /I /L "alias." |
     Select-String "^alias\.($Alias)=(.*($Content).*)" |
     ForEach-Object {
         [PSCustomObject]@{
-            Alias   = $_.Matches[0].Groups[1]
-            Content = $_.Matches[0].Groups[2]
+            Alias   = $_.Matches[0].Groups[1].Value
+            Content = $_.Matches[0].Groups[2].Value
         }
     } |
     Format-Table -Wrap
