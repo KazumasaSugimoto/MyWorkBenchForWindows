@@ -7,7 +7,7 @@
 ;   + is Shift
 ;   # is Win
 ;
-;   memo. If ( WinActive("ahk_exe idea64.exe") )
+;   memo. if ( WinActive("ahk_exe idea64.exe") )
 ;
 ;###############################################################
 
@@ -99,13 +99,13 @@
    <+<!>^l:: Send "+!{Right}"
    <+<#>^l:: Send  "+{End}"
 
-   <^<!<#l:: SwitchExplorer ;; TODO
+   <^<!<#l:: switchExplorer ;; TODO
 
 ;-----------------------
 ;   m M
 
        >^m:: Send "{AppsKey}" ;; TODO
-;  <^<!<#m:: ToggleMode
+;  <^<!<#m:: toggleMode
    <^<!<#m:: switchOrLaunchApplication("Mailer", "outlook.exe")
 
 ;-----------------------
@@ -262,7 +262,7 @@
        >^[:: Send  "{ESC}"
 ;      >^[:: Send  "{Home}"
 ;    <+>^[:: Send "+{Home}"
-;  <^<!<#[:: SetVimNormalMode
+;  <^<!<#[:: setVimNormalMode
        <#[:: moveHistoryStack("back")   ;; TODO
      <+<#[:: changeTabInWindow("left")  ;; TODO
    <+<^<#[:: changeWindowOfSameApplication("back")  ;; TODO
@@ -272,7 +272,7 @@
 
 ;      >^]:: Send  "{End}"
 ;    <+>^]:: Send "+{End}"
-;  <^<!<#]:: SetDefaultMode
+;  <^<!<#]:: setDefaultMode
        <#]:: moveHistoryStack("forward")    ;; TODO
      <+<#]:: changeTabInWindow("right") ;; TODO
    <+<^<#]:: changeWindowOfSameApplication("next")  ;; TODO
@@ -287,7 +287,7 @@
 ;   ; :
 
     <+>^`;:: Send "#r" ;; TODO
-      >^`;:: FocusApplicationAddressBar
+      >^`;:: focusApplicationAddressBar
 
    <^<!<#;:: switchOrLaunchApplication("Code Editor", "code.exe", "code.cmd")
 
@@ -299,7 +299,7 @@
 ;-----------------------
 ;   Enter
 
-;<^<!<#Enter:: ToggleMode
+;<^<!<#Enter:: toggleMode
 
 ;-----------------------
 ;   , <
@@ -319,7 +319,7 @@
 ;-----------------------
 ;   / ?
 
-;<^<!<#/:: QueryMode
+;<^<!<#/:: queryMode
 
 ;-----------------------
 ;   Space
@@ -341,15 +341,15 @@ moveHistoryStack(moveDirection)
     ;;   Chrome
     ;;   VSCode
     
-    If (moveDirection = "back")
+    if (moveDirection = "back")
     {
         Send "!{Left}"
     }
-    Else If (moveDirection = "forward")
+    else if (moveDirection = "forward")
     {
         Send "!{Right}"
     }
-    Else
+    else
     {
         ; Button : OK(0)
         ; Icon   : x(16)
@@ -367,29 +367,29 @@ changeTabInWindow(changeDirection)
     ;;   VSCode
     ;;   Eclipse
 
-    If (changeDirection = "left")
+    if (changeDirection = "left")
     {
-        If WinActive("ahk_exe excel.exe")
+        if WinActive("ahk_exe excel.exe")
             Send "^{PgUp}"
-        Else If WinActive("ahk_exe code.exe")
+        else if WinActive("ahk_exe code.exe")
             Send "^{PgUp}"
-        Else If WinActive("ahk_exe eclipse.exe")
+        else if WinActive("ahk_exe eclipse.exe")
             Send "^{PgUp}"
-        Else
+        else
             Send "+^{Tab}"
     }
-    Else If (changeDirection = "right")
+    else if (changeDirection = "right")
     {
-        If WinActive("ahk_exe excel.exe")
+        if WinActive("ahk_exe excel.exe")
             Send "^{PgDn}"
-        Else If WinActive("ahk_exe code.exe")
+        else if WinActive("ahk_exe code.exe")
             Send "^{PgDn}"
-        Else If WinActive("ahk_exe eclipse.exe")
+        else if WinActive("ahk_exe eclipse.exe")
             Send "^{PgDn}"
-        Else
+        else
             Send "^{Tab}"
     }
-    Else
+    else
     {
         ; Button : OK(0)
         ; Icon   : x(16)
@@ -405,15 +405,15 @@ closeTabInWindow()
 
 changeWindowOfSameApplication(changeDirection)
 {
-    If (changeDirection = "back")
+    if (changeDirection = "back")
     {
         Send "+^#["  ;; TODO
     }
-    Else If (changeDirection = "next")
+    else if (changeDirection = "next")
     {
         Send "+^#]"  ;; TODO
     }
-    Else
+    else
     {
         ; Button : OK(0)
         ; Icon   : x(16)
@@ -429,8 +429,8 @@ closeWindow()
     ; Button  : Yes/No(4)
     ; Icon    : !(48)
     ; Default : No<2nd>(256)
-    YNAns := MsgBox("Current window is`n" windowTitle "`n`nClose this windows!`nAre you sure?", "AutoHotKey Confirmation", "Icon! YesNo Default2")
-    If YNAns = "Yes"
+    AnsYN := MsgBox("Current window is`n" windowTitle "`n`nClose this windows!`nAre you sure?", "AutoHotKey Confirmation", "Icon! YesNo Default2")
+    if AnsYN = "Yes"
     {
     ;;  Send "!{F4}" ;; disabled for cmd.exe
         WinClose windowTitle
@@ -455,17 +455,17 @@ switchOrLaunchApplication(appName, procName, cmdLine:="")
     ;     close (toggle)
     ;     change activate to same application other window
 
-    If (cmdLine = "")
+    if (cmdLine = "")
         cmdLine := procName
 
 ;;  Process, Exist, %procName%
-;;  If (ErrorLevel <> 0)
-    If WinExist("ahk_exe " procName)
+;;  if (ErrorLevel <> 0)
+    if WinExist("ahk_exe " procName)
     {
     ;;  WinActivate, ahk_pid %ErrorLevel%
         WinActivate
     }
-    Else
+    else
     {
         TrayTip "Accepted request!`nStart " appName " (" procName ")", "AutoHotKey Notice", "IconI"
         Run cmdLine
@@ -473,13 +473,13 @@ switchOrLaunchApplication(appName, procName, cmdLine:="")
     return
 }
 
-SwitchExplorer()
+switchExplorer()
 {
-    If WinExist("ahk_class CabinetWClass")
+    if WinExist("ahk_class CabinetWClass")
     {
         WinActivate
     }
-    Else
+    else
     {
         Run "explorer.exe"
     }
@@ -490,33 +490,33 @@ SwitchExplorer()
 ;   APPLICATION FUNCTIONS
 ;===============================================================
 
-FocusApplicationAddressBar()
+focusApplicationAddressBar()
 {
-    If WinActive("ahk_exe explorer.exe")
+    if WinActive("ahk_exe explorer.exe")
     {
         Send "!d"
     }
-    Else If WinActive("ahk_exe iexplorer.exe")
+    else if WinActive("ahk_exe iexplorer.exe")
     {
         Send "!d"
     }
-    Else If WinActive("ahk_exe chrome.exe")
+    else if WinActive("ahk_exe chrome.exe")
     {
         Send "!d"
     }
-    Else If WinActive("ahk_exe code.exe")
+    else if WinActive("ahk_exe code.exe")
     {
         Send "+^p"
     }
-    Else If WinActive("ahk_exe excel.exe")
+    else if WinActive("ahk_exe excel.exe")
     {
         Send "{F2}"
     }
-    Else If WinActive("ahk_exe bc2.exe")
+    else if WinActive("ahk_exe bc2.exe")
     {
         Send "{F2}"
     }
-    Else
+    else
     {
         Send "#r"
     }
