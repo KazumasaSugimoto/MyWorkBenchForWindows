@@ -2,6 +2,7 @@
 
 rem Outputs all sort orders of arguments.
 
+if "%~1" equ "" goto SHOW_HELP
 for /f "usebackq tokens=*" %%a in (`echov.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
 
 setlocal EnableDelayedExpansion
@@ -10,17 +11,13 @@ set ARGS.COUNT=0
 
 :SET_ARGS
 
-if "%~1" equ "" goto DO_MAIN
-
 set /a ARGS.COUNT+=1
 set ARGS[%ARGS.COUNT%]=%~1
 
 shift /1
-goto SET_ARGS
+if "%~1" neq "" goto SET_ARGS
 
 :DO_MAIN
-
-if %ARGS.COUNT% equ 0 goto SHOW_HELP
 
 for /f "usebackq tokens=*" %%a in (`gaso.cmd %ARGS.COUNT%`) do call :SUB_MAIN "%%a"
 exit /b 0
@@ -65,4 +62,4 @@ echo         b c a
 echo         c a b
 echo         c b a
 
-exit /b 0
+exit /b 1
