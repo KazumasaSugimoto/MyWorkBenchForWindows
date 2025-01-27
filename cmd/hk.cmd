@@ -3,7 +3,7 @@
 setlocal
 
 set BIN_FOLDER=C:\Program Files\AutoHotkey\
-set SRC_FOLDER=%USERPROFILE%\Documents\
+set SRC_FOLDER=%~dp0..\conf\ahk\
 
 set OPTS_EDIT_SELF=--edit-self -es /es :es
 set OPTS_EDIT_CODE=--edit-code -ec /ec :ec
