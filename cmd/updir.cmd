@@ -1,7 +1,7 @@
 @echo off
 
 if "%~1" equ "" goto SHOW_HELP
-for /f "usebackq tokens=*" %%a in (`echov.cmd --edit-self -es /es :ed`) do if /i "%~1" equ "%%a" goto EDIT_SELF
+for /f "usebackq tokens=*" %%a in (`echov.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
 
 setlocal EnableDelayedExpansion
 
@@ -41,5 +41,9 @@ echo.
 echo usage:
 echo.
 echo     %~n0[%~x0] [path]file-name
+echo.
+echo example:
+echo.
+echo     %~n0 .gitignore
 
 exit /b 1
