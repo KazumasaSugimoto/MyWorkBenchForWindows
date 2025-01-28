@@ -14,14 +14,15 @@ setlocal EnableDelayedExpansion
 
 set DESTINATION=%~1
 
-if not exist "%DESTINATION%" (
-    if defined PD_TAGs[%DESTINATION%] (
-        set DESTINATION=!PD_TAGs[%DESTINATION%]!
-    )
-    if defined %DESTINATION% (
-        set DESTINATION=!%DESTINATION%!
-    )
+if exist "%DESTINATION%" goto DO_PUSHD
+
+if defined PD_TAGs[%DESTINATION%] (
+    set DESTINATION=!PD_TAGs[%DESTINATION%]!
+) else if defined %DESTINATION% (
+    set DESTINATION=!%DESTINATION%!
 )
+
+:DO_PUSHD
 
 endlocal & pushd "%DESTINATION%"
 exit /b %ERRORLEVEL%
