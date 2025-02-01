@@ -32,7 +32,7 @@ exit /b 0
 :SHOW_HELP
 
 echo -------------------------------------------------------------------------------
-echo Path String Split List
+echo Path String Splitter
 echo -------------------------------------------------------------------------------
 echo.
 echo usage:
