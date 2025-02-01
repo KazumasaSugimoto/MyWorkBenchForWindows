@@ -13,7 +13,7 @@ if not defined SEPARATOR set SEPARATOR=.
 
 :SPLIT_NODES
 
-set NODES=!NODES:%SEPARATOR%= !
+set NODES="!NODES:%SEPARATOR%=" "!"
 set NODES.COUNT=0
 
 for /f "usebackq tokens=*" %%n in (`echov.cmd %NODES%`) do (
