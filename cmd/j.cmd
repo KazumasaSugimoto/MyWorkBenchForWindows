@@ -1,13 +1,12 @@
 @echo off
-rem このファイルの文字コードはShift-JISです。
 
 :BEGIN
 if /i "%~1" equ "" goto PROMPT
 
-for /f "usebackq tokens=1" %%a in (`echov --edit /edit :edit`) do if /i "%~1" equ "%%a" goto EDIT_SELF
-for /f "usebackq tokens=1" %%a in (`echov --list /list :list`) do if /i "%~1" equ "%%a" goto EDIT_LIST
+for /f "usebackq tokens=1" %%a in (`echov.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
+for /f "usebackq tokens=1" %%a in (`echov.cmd --edit-list -el /el :el`) do if /i "%~1" equ "%%a" goto EDIT_LIST
 
-for /f "usebackq eol=# tokens=1,2*" %%a in (`find /i "%~1" "%~dpn0.lst"`) do (
+for /f "usebackq eol=# tokens=1,2*" %%a in (`find /i "%~1" "%~dp0conf\%~n0.lst"`) do (
     if /i "%~1" equ "%%a" (
         call :%%b_CASE "%%c"
     )    
@@ -35,5 +34,5 @@ call code.cmd "%~f0"
 goto :EOF
 
 :EDIT_LIST
-call code.cmd "%~dpn0.lst"
+call code.cmd "%~dp0conf\%~n0.lst"
 goto :EOF
