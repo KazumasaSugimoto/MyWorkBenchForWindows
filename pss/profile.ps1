@@ -5,7 +5,7 @@ function prompt {
 
 }
 
-function ver {
+function Get-MyPSVersionString {
 
 <#
     .SYNOPSIS
@@ -16,7 +16,7 @@ function ver {
 
 }
 
-function pd {
+function Move-MyPSCurrentDirectory {
 
 <#
     .SYNOPSIS
@@ -25,12 +25,14 @@ function pd {
 
     param
     (
-        [String]$Path = ''
+        [Parameter()]
+        [String]
+        $Path = ''
     )
 
     if ($Path -ne '')
     {
-        Push-Location -Path $Path   
+        Push-Location -Path $Path
     }
     else
     {
@@ -38,3 +40,6 @@ function pd {
     }
 
 }
+
+Set-Alias -Name ver -Value Get-MyPSVersionString
+Set-Alias -Name pd  -Value Move-MyPSCurrentDirectory
