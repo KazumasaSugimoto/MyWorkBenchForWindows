@@ -55,7 +55,20 @@ function Get-MyPSCommandSyntax {
         $Name
     )
 
-    Get-Command -Name $Name -Syntax
+    $result = Get-Command -Name $Name
+
+    switch ($result.CommandType.ToString())
+    {
+        "Alias"
+        {
+            Write-Output "`n$($result.DisplayName)"
+            Get-Command -Name $result.ResolvedCommandName -Syntax
+        }
+        Default
+        {
+            Get-Command -Name $Name -Syntax
+        }
+    }
 
 }
 
@@ -82,3 +95,4 @@ Set-Alias -Name ver     -Value Get-MyPSVersionString
 Set-Alias -Name pd      -Value Move-MyPSCurrentDirectory
 Set-Alias -Name syntax  -Value Get-MyPSCommandSyntax
 Set-Alias -Name src     -Value Get-MyPSScriptBlock
+Set-Alias -Name source  -Value Get-MyPSScriptBlock
