@@ -86,8 +86,20 @@ function Get-MyPSScriptBlock {
         $Name
     )
 
-    Get-Command -Name $Name |
-        Select-Object -ExpandProperty ScriptBlock
+    $result = Get-Command -Name $Name
+
+    switch ($result.CommandType.ToString())
+    {
+        "Alias"
+        {
+            Write-Output "`n$($result.DisplayName)"
+            Get-MyPSScriptBlock -Name $result.ResolvedCommandName
+        }
+        Default
+        {
+            Select-Object -InputObject $result -ExpandProperty ScriptBlock
+        }
+    }
 
 }
 
