@@ -29,7 +29,7 @@ echo usage:
 echo.
 echo     %~n0[%~x0] sub-command
 echo.
-echo sub-command;
+echo sub-command:
 echo.
 echo     %SUBCMDS_POWEROFF: = ^| %
 echo     %SUBCMDS_SUSPEND: = ^| %
