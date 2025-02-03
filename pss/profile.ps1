@@ -41,5 +41,44 @@ function Move-MyPSCurrentDirectory {
 
 }
 
-Set-Alias -Name ver -Value Get-MyPSVersionString
-Set-Alias -Name pd  -Value Move-MyPSCurrentDirectory
+function Get-MyPSCommandSyntax {
+
+<#
+    .SYNOPSIS
+        put command syntax.
+#>
+
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $Name
+    )
+
+    Get-Command -Name $Name -Syntax
+
+}
+
+function Get-MyPSScriptBlock {
+
+<#
+    .SYNOPSIS
+        put script source.
+#>
+
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $Name
+    )
+
+    Get-Command -Name $Name |
+        Select-Object -ExpandProperty ScriptBlock
+
+}
+
+Set-Alias -Name ver     -Value Get-MyPSVersionString
+Set-Alias -Name pd      -Value Move-MyPSCurrentDirectory
+Set-Alias -Name syntax  -Value Get-MyPSCommandSyntax
+Set-Alias -Name src     -Value Get-MyPSScriptBlock
