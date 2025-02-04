@@ -71,6 +71,12 @@ function Get-MyPSCommandSyntax {
     if ($Parameter -eq '')
     {
         Get-Command -Name $Name -Syntax
+        $retVal = Get-Help -Name $Name |
+            Select-Object -ExpandProperty returnValues -ErrorAction Ignore
+        if ($retVal -ne $nul)
+        {
+            $retVal
+        }
     }
     else
     {
