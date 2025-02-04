@@ -52,7 +52,10 @@ function Get-MyPSCommandSyntax {
     (
         [Parameter(Position=0)]
         [String]
-        $Name
+        $Name,
+        [Parameter(Position=1)]
+        [String]
+        $Parameter
     )
 
     $result = Get-Command -Name $Name
@@ -65,7 +68,14 @@ function Get-MyPSCommandSyntax {
             $Name = $result.ResolvedCommandName
         }
     }
-    Get-Command -Name $Name -Syntax
+    if ($Parameter -eq '')
+    {
+        Get-Command -Name $Name -Syntax
+    }
+    else
+    {
+        Get-Help -Name $Name -Parameter $Parameter
+    }
 
 }
 
