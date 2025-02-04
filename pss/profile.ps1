@@ -62,13 +62,10 @@ function Get-MyPSCommandSyntax {
         "Alias"
         {
             Write-Output "`n$($result.DisplayName)"
-            Get-Command -Name $result.ResolvedCommandName -Syntax
-        }
-        Default
-        {
-            Get-Command -Name $Name -Syntax
+            $Name = $result.ResolvedCommandName
         }
     }
+    Get-Command -Name $Name -Syntax
 
 }
 
