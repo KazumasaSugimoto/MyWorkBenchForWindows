@@ -3,7 +3,7 @@
 rem Outputs all sort orders of arguments.
 
 if "%~1" equ "" goto SHOW_HELP
-for /f "usebackq tokens=*" %%a in (`echov.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
+for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
 
 setlocal EnableDelayedExpansion
 
@@ -25,7 +25,7 @@ exit /b 0
 :SUB_MAIN
 
 set RESULT=
-for /f "usebackq tokens=*" %%i in (`echov.cmd %~1`) do (
+for /f "usebackq tokens=*" %%i in (`echor.cmd %~1`) do (
     set RESULT=!RESULT! !ARGS[%%i]!
 )
 echo.%RESULT:~1%

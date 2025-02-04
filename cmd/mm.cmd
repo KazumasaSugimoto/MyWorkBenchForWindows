@@ -4,9 +4,9 @@ setlocal EnableDelayedExpansion
 
 set template_path=%~dp0conf\%~n0.form
 
-for /f "usebackq tokens=*" %%a in (`echov.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
-for /f "usebackq tokens=*" %%a in (`echov.cmd --edit-form -ef /ef :ef`) do if /i "%~1" equ "%%a" goto EDIT_FORM
-for /f "usebackq tokens=*" %%a in (`echov.cmd --edit-path -ep /ep :ep`) do if /i "%~1" equ "%%a" goto EDIT_PATH
+for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
+for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-form -ef /ef :ef`) do if /i "%~1" equ "%%a" goto EDIT_FORM
+for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-path -ep /ep :ep`) do if /i "%~1" equ "%%a" goto EDIT_PATH
 
 :SEARCH
 

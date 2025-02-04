@@ -3,8 +3,8 @@
 :BEGIN
 if /i "%~1" equ "" goto PROMPT
 
-for /f "usebackq tokens=1" %%a in (`echov.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
-for /f "usebackq tokens=1" %%a in (`echov.cmd --edit-list -el /el :el`) do if /i "%~1" equ "%%a" goto EDIT_LIST
+for /f "usebackq tokens=1" %%a in (`echor.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
+for /f "usebackq tokens=1" %%a in (`echor.cmd --edit-list -el /el :el`) do if /i "%~1" equ "%%a" goto EDIT_LIST
 
 for /f "usebackq eol=# tokens=1,2*" %%a in (`find /i "%~1" "%~dp0conf\%~n0.lst"`) do (
     if /i "%~1" equ "%%a" (

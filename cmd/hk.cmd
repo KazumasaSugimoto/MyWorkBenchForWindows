@@ -8,14 +8,14 @@ set SRC_FOLDER=%~dp0..\conf\ahk\
 set OPTS_EDIT_SELF=--edit-self -es /es :es
 set OPTS_EDIT_CODE=--edit-code -ec /ec :ec
 
-for /f "usebackq tokens=*" %%a in (`echov.cmd %OPTS_EDIT_SELF%`) do if /i "%~1" equ "%%a" goto EDIT_SELF
-for /f "usebackq tokens=*" %%a in (`echov.cmd %OPTS_EDIT_CODE%`) do if /i "%~1" equ "%%a" goto EDIT_CODE
+for /f "usebackq tokens=*" %%a in (`echor.cmd %OPTS_EDIT_SELF%`) do if /i "%~1" equ "%%a" goto EDIT_SELF
+for /f "usebackq tokens=*" %%a in (`echor.cmd %OPTS_EDIT_CODE%`) do if /i "%~1" equ "%%a" goto EDIT_CODE
 
 set OPTS_VER1=ver1 v1 1
 set OPTS_VER2=ver2 v2 2
 
-for /f "usebackq tokens=*" %%a in (`echov.cmd %OPTS_VER1%`) do if /i "%~1" equ "%%a" goto START_V1
-for /f "usebackq tokens=*" %%a in (`echov.cmd %OPTS_VER2%`) do if /i "%~1" equ "%%a" goto START_V2
+for /f "usebackq tokens=*" %%a in (`echor.cmd %OPTS_VER1%`) do if /i "%~1" equ "%%a" goto START_V1
+for /f "usebackq tokens=*" %%a in (`echor.cmd %OPTS_VER2%`) do if /i "%~1" equ "%%a" goto START_V2
 
 echo -------------------------------------------------------------------------------
 echo Start AutoHotkey

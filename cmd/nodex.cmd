@@ -3,7 +3,7 @@
 rem Outputs all sort orders of nodes.
 
 if "%~1" equ "" goto SHOW_HELP
-for /f "usebackq tokens=*" %%a in (`echov.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
+for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
 
 setlocal EnableDelayedExpansion
 
@@ -16,7 +16,7 @@ if not defined SEPARATOR set SEPARATOR=.
 set NODES="!NODES:%SEPARATOR%=" "!"
 set NODES.COUNT=0
 
-for /f "usebackq tokens=*" %%n in (`echov.cmd %NODES%`) do (
+for /f "usebackq tokens=*" %%n in (`echor.cmd %NODES%`) do (
     set /a NODES.COUNT+=1
     set NODES[!NODES.COUNT!]=%%n
 )
@@ -31,7 +31,7 @@ exit /b 0
 :SUB_MAIN
 
 set RESULT=
-for /f "usebackq tokens=*" %%i in (`echov.cmd %~1`) do (
+for /f "usebackq tokens=*" %%i in (`echor.cmd %~1`) do (
     set RESULT=!RESULT!%SEPARATOR%!NODES[%%i]!
 )
 echo %RESULT:~1%
