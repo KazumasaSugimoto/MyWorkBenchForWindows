@@ -78,6 +78,19 @@ function Get-MyPSCommandSyntax {
             $retVal
         }
     }
+    elseif ($Parameter -eq '?')
+    {
+        $examples = Get-Help -Name $Name |
+            Select-Object -ExpandProperty examples -ErrorAction Ignore
+        if ($examples -ne $nul)
+        {
+            $examples
+        }
+        else
+        {
+            Write-Output "`nno example.`n"
+        }
+    }
     else
     {
         Get-Help -Name $Name -Parameter $Parameter
