@@ -6,6 +6,9 @@ for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-self -es /es :es`) do if /i
 
 setlocal
 
+set WITH_CURDIR=
+for /f "usebackq tokens=*" %%a in (`echor.cmd --cur-dir -cd /cd :cd`) do if /i "%~1" equ "%%a" set WITH_CURDIR=True
+
 set FOREACH_CMD=powershell "Get-CimInstance -ClassName Win32_LogicalDisk | Select-Object -Property DeviceId, Description | Format-Table -HideTableHeaders"
 for /f "usebackq tokens=1*" %%a in (`%FOREACH_CMD%`) do (
     call :PUT_DRIVE_INFO "%%a" "%%b"
@@ -16,7 +19,8 @@ exit /b 0
 
 set DEVICE_ID=%~1
 set DESCRIPTION=%~2
-call :GET_SET_CURRENT_DIRECTORY
+set CURDIR_OR_ERRMSG=
+if defined WITH_CURDIR call :GET_SET_CURRENT_DIRECTORY
 
 echo %DEVICE_ID% %DESCRIPTION% %CURDIR_OR_ERRMSG%
 goto :EOF
