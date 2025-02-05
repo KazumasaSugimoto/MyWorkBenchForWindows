@@ -78,14 +78,29 @@ exit /b 0
 
 echo --- sub-command mode ---
 
+if /i "%~2"     equ "today"     goto MOVE_TO_TODAY'S_TEMP_FOLDER
 if /i "%~2 %~3" equ "edit self" goto EDIT_SELF
 
 echo.
 echo usage:
 echo     %~n0[%~x0] : sub-command
 echo sub-command:
+echo     today
 echo     edit self
 exit /b 1
+
+:MOVE_TO_TODAY'S_TEMP_FOLDER
+
+setlocal
+
+set YMD=%DATE:/=%
+set YMD=%YMD:-=%
+set DESTINATION=%TEMP%\%YMD:~0,4%\%YMD:~0,6%\%YMD%
+
+mkdir "%DESTINATION%" 2>nul
+
+endlocal & pushd "%DESTINATION%"
+exit /b %ERRORLEVEL%
 
 :EDIT_SELF
 
