@@ -4,12 +4,11 @@ rem Outputs assigned drive list.
 
 for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
 
-for /f "usebackq tokens=*" %%a in (`echov.cmd ABCDEFGHIJKLMNOPQRSTUVWXYZ`) do (
-    pushd "%%a:\" 2>nul
-    if not ERRORLEVEL 1 (
-        echo %%a:
-        popd
-    )
+setlocal
+
+set FOREACH_CMD=powershell "Get-CimInstance -ClassName Win32_LogicalDisk | Select-Object -Property DeviceId, Description | Format-Table -HideTableHeaders"
+for /f "usebackq tokens=1*" %%a in (`%FOREACH_CMD%`) do (
+    echo %%a %%b
 )
 exit /b 0
 
