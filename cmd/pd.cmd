@@ -41,7 +41,7 @@ if "%~2" equ "" (
     echo usage:
     echo     %~n0[%~x0] . tag-name
     echo.
-    set PD_TAGs[
+    set PD_TAGs[ 2>nul
     exit /b 1
 )
 
@@ -59,7 +59,7 @@ if "%~2" equ "" (
     echo usage:
     echo     %~n0[%~x0] / tag-name
     echo.
-    set PD_TAGs[
+    set PD_TAGs[ 2>nul
     exit /b 1
 )
 
