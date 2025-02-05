@@ -9,7 +9,7 @@ setlocal
 set WITH_CURDIR=
 for /f "usebackq tokens=*" %%a in (`echor.cmd --cur-dir -cd /cd :cd`) do if /i "%~1" equ "%%a" set WITH_CURDIR=True
 
-set FOREACH_CMD=powershell "Get-CimInstance -ClassName Win32_LogicalDisk | Select-Object -Property DeviceId, DriveType, Description | Format-Table -HideTableHeaders"
+set FOREACH_CMD=powershell "Get-CimInstance -ClassName Win32_LogicalDisk | Select-Object -Property DeviceId, DriveType, Description, VolumeName, VolumeSerialNumber | Format-Table -HideTableHeaders"
 for /f "usebackq tokens=1,2*" %%a in (`%FOREACH_CMD%`) do (
     call :PUT_DRIVE_INFO "%%a" "%%b" "%%c"
 )
