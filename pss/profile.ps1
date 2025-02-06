@@ -55,7 +55,7 @@ function Get-MyPSCommandSyntax {
         $Name,
         [Parameter(Position=1)]
         [String]
-        $Parameter
+        $Parameter = ''
     )
 
     $result = Get-Command -Name $Name
@@ -71,11 +71,11 @@ function Get-MyPSCommandSyntax {
     if ($Parameter -eq '')
     {
         Get-Command -Name $Name -Syntax
-        $retVal = Get-Help -Name $Name |
+        $retVals = Get-Help -Name $Name |
             Select-Object -ExpandProperty returnValues -ErrorAction Ignore
-        if ($retVal -ne $nul)
+        if ($retVals -ne $nul)
         {
-            $retVal
+            $retVals
         }
     }
     elseif ($Parameter -eq '?')
@@ -93,7 +93,7 @@ function Get-MyPSCommandSyntax {
     }
     else
     {
-        Get-Help -Name $Name -Parameter $Parameter
+        Get-Help -Name $Name -Parameter $Parameter -ErrorAction Ignore
     }
 
 }
@@ -123,7 +123,7 @@ function Get-MyPSScriptBlock {
         }
         Default
         {
-            Select-Object -InputObject $result -ExpandProperty ScriptBlock
+            Select-Object -InputObject $result -ExpandProperty ScriptBlock -ErrorAction Ignore
         }
     }
 
