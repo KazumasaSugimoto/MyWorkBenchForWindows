@@ -172,6 +172,25 @@ function Set-MyPSWindowTitle {
 
 }
 
+function Import-MyPSCsv {
+
+<#
+    .SYNOPSIS
+        Import-Csv for SJIS encoding.
+#>
+
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $Path
+    )
+
+    Get-Content -Path $Path |
+        ConvertFrom-Csv
+
+}
+
 Set-Alias -Name ver     -Value Get-MyPSVersionString
 Set-Alias -Name pd      -Value Move-MyPSCurrentDirectory
 Set-Alias -Name syntax  -Value Get-MyPSCommandSyntax
