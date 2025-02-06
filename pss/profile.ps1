@@ -129,8 +129,52 @@ function Get-MyPSScriptBlock {
 
 }
 
+function Get-MyPSWindowTitle {
+
+<#
+    .SYNOPSIS
+        Put host window title.
+#>
+
+    (Get-Host).UI.RawUI.WindowTitle
+
+}
+
+function Set-MyPSWindowTitle {
+
+<#
+    .SYNOPSIS
+        Set host window title.
+#>
+
+    param
+    (
+        [Parameter()]
+        [String]
+        $WindowTitle = ''
+    )
+
+    switch ($WindowTitle)
+    {
+        ''
+        {
+            $WindowTitle = (Get-Location).Path
+            break
+        }
+        ({ $_ -in @( '.', '..' ) })
+        {
+            $WindowTitle = (Get-Item -Path $_).Name
+            break
+        }
+    }
+
+    (Get-Host).UI.RawUI.WindowTitle = $WindowTitle
+
+}
+
 Set-Alias -Name ver     -Value Get-MyPSVersionString
 Set-Alias -Name pd      -Value Move-MyPSCurrentDirectory
 Set-Alias -Name syntax  -Value Get-MyPSCommandSyntax
 Set-Alias -Name src     -Value Get-MyPSScriptBlock
 Set-Alias -Name source  -Value Get-MyPSScriptBlock
+Set-Alias -Name tt      -Value Set-MyPSWindowTitle
