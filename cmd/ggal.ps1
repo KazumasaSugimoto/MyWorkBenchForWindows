@@ -16,12 +16,19 @@ if ($Content -eq '') { $Content = '.*'  } else { $Content = $Content.Replace('*'
 
 # git config --list --global |
 git config list --global |
-    # findstr.exe /B /I /L "alias." |
-    Select-String "^alias\.($Alias)=(.*($Content).*)" |
+    findstr.exe /B /I /L "alias." |
+    # Select-String "^alias\.($Alias)=(.*($Content).*)" |
     ForEach-Object {
-        [PSCustomObject]@{
-            Alias   = $_.Matches[0].Groups[1].Value
-            Content = $_.Matches[0].Groups[2].Value
+        # [PSCustomObject]@{
+        #     Alias   = $_.Matches[0].Groups[1].Value
+        #     Content = $_.Matches[0].Groups[2].Value
+        # }
+        if ($_ -match "^alias\.(?<Alias>$Alias)=(?<Content>.*($Content).*)")
+        {
+            [PSCustomObject]@{
+                Alias   = $Matches.Alias
+                Content = $Matches.Content
+            }
         }
     } |
     Format-Table -Wrap
