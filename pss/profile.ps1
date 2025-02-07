@@ -233,6 +233,26 @@ function Get-MyPSTextFileInfo
     return $fileInfo
 }
 
+function Get-MyPSLeafFolders
+{
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $FolderPath = '.'
+    )
+
+    $prevFolder = ''
+    (cmd /c "cd ""$FolderPath"" & dir /ad /b /s | sort /r") |
+        ForEach-Object {
+            if ($prevFolder -notlike "$_*") 
+            {
+                Write-Output $_
+            }
+            $prevFolder = $_
+        }
+}
+
 Set-Alias -Name ver     -Value Get-MyPSVersionString
 Set-Alias -Name pd      -Value Move-MyPSCurrentDirectory
 Set-Alias -Name syntax  -Value Get-MyPSCommandSyntax
