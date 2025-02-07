@@ -243,14 +243,16 @@ function Get-MyPSLeafFolders
     )
 
     $prevFolder = ''
-    (cmd /c "cd ""$BaseFolderPath"" & dir /ad /b /s | sort /r") |
+    (cmd /c "cd ""$BaseFolderPath"" & dir /ad /b /s") |
+        Sort-Object -Descending |
         ForEach-Object {
             if ($prevFolder -notlike "$_*") 
             {
                 Write-Output $_
             }
             $prevFolder = $_
-        }
+        } |
+        Sort-Object
 }
 
 function Get-MyPSEmptyFolders
