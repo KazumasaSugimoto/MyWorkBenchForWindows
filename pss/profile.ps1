@@ -1,28 +1,24 @@
-function prompt {
-
+function prompt
+{
 #   "PS $($executionContext.SessionState.Path.CurrentLocation)$('>' * ($nestedPromptLevel + 1)) ";
     "PS $($executionContext.SessionState.Path.CurrentLocation)`n> ";
-
 }
 
-function Get-MyPSVersionString {
-
+function Get-MyPSVersionString
+{
 <#
     .SYNOPSIS
         Put PSVersion String.
 #>
-
-    $PSVersionTable.PSVersion.ToString()
-
+    Write-Output $PSVersionTable.PSVersion.ToString()
 }
 
-function Move-MyPSCurrentDirectory {
-
+function Move-MyPSCurrentDirectory
+{
 <#
     .SYNOPSIS
         pushd/popd helper.
 #>
-
     param
     (
         [Parameter()]
@@ -38,16 +34,14 @@ function Move-MyPSCurrentDirectory {
     {
         Pop-Location
     }
-
 }
 
-function Get-MyPSCommandSyntax {
-
+function Get-MyPSCommandSyntax
+{
 <#
     .SYNOPSIS
         put command syntax.
 #>
-
     param
     (
         [Parameter(Position=0)]
@@ -68,6 +62,7 @@ function Get-MyPSCommandSyntax {
             $Name = $result.ResolvedCommandName
         }
     }
+
     if ($Parameter -eq '')
     {
         Get-Command -Name $Name -Syntax
@@ -75,7 +70,7 @@ function Get-MyPSCommandSyntax {
             Select-Object -ExpandProperty returnValues -ErrorAction Ignore
         if ($retVals -ne $nul)
         {
-            $retVals
+            Write-Output $retVals
         }
     }
     elseif ($Parameter -eq '?')
@@ -84,7 +79,7 @@ function Get-MyPSCommandSyntax {
             Select-Object -ExpandProperty examples -ErrorAction Ignore
         if ($examples -ne $nul)
         {
-            $examples
+            Write-Output $examples
         }
         else
         {
@@ -95,16 +90,14 @@ function Get-MyPSCommandSyntax {
     {
         Get-Help -Name $Name -Parameter $Parameter -ErrorAction Ignore
     }
-
 }
 
-function Get-MyPSScriptBlock {
-
+function Get-MyPSScriptBlock
+{
 <#
     .SYNOPSIS
         put script source.
 #>
-
     param
     (
         [Parameter(Position=0)]
@@ -126,27 +119,23 @@ function Get-MyPSScriptBlock {
             Select-Object -InputObject $result -ExpandProperty ScriptBlock -ErrorAction Ignore
         }
     }
-
 }
 
-function Get-MyPSWindowTitle {
-
+function Get-MyPSWindowTitle
+{
 <#
     .SYNOPSIS
         Put host window title.
 #>
-
     (Get-Host).UI.RawUI.WindowTitle
-
 }
 
-function Set-MyPSWindowTitle {
-
+function Set-MyPSWindowTitle
+{
 <#
     .SYNOPSIS
         Set host window title.
 #>
-
     param
     (
         [Parameter()]
@@ -169,7 +158,6 @@ function Set-MyPSWindowTitle {
     }
 
     (Get-Host).UI.RawUI.WindowTitle = $WindowTitle
-
 }
 
 Set-Alias -Name ver     -Value Get-MyPSVersionString
