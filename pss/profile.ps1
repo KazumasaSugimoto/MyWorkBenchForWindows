@@ -187,6 +187,39 @@ function Get-MyPSFileInfo
     return $fileInfo
 }
 
+function Get-MyPSTextFileInfo
+{
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $FilePath,
+        [Parameter(Position=1)]
+        [String]
+        $HashAlgorithm = 'SHA1',
+        [Parameter()]
+        [String]
+        $Encoding = 'OEM'
+    )
+
+    $fileInfo = Get-MyPSFileInfo -FilePath $FilePath -HashAlgorithm $HashAlgorithm
+
+    $rowsCount = @{
+        Total = [int]0
+        Blank = [int]0
+    }
+
+    Get-Content -Path $FilePath -Encoding $Encoding |
+        ForEach-Object {
+            $rowsCount.Total++
+            if ($_ -eq '') { $rowsCount.Blank++ }
+        }
+
+    Add-Member -InputObject $fileInfo.MyPSNotes -NotePropertyName RowsCount -NotePropertyValue $rowsCount
+
+    return $fileInfo
+}
+
 Set-Alias -Name ver     -Value Get-MyPSVersionString
 Set-Alias -Name pd      -Value Move-MyPSCurrentDirectory
 Set-Alias -Name syntax  -Value Get-MyPSCommandSyntax
