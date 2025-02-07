@@ -160,6 +160,33 @@ function Set-MyPSWindowTitle
     (Get-Host).UI.RawUI.WindowTitle = $WindowTitle
 }
 
+function Get-MyPSFileInfo
+{
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $FilePath,
+        [Parameter(Position=1)]
+        [String]
+        $HashAlgorithm = 'SHA1'
+    )
+
+    $fileInfo = Get-Item -Path $FilePath
+    $fileHash = Get-FileHash -Path $FilePath -Algorithm $HashAlgorithm
+
+    $MyPSNotes = [PSCustomObject]@{
+        RawPath = $FilePath
+        Hash = @{
+            $HashAlgorithm = $fileHash.Hash.ToLower()
+        }
+    }
+
+    Add-Member -InputObject $fileInfo -NotePropertyName MyPSNotes -NotePropertyValue $MyPSNotes
+
+    return $fileInfo
+}
+
 Set-Alias -Name ver     -Value Get-MyPSVersionString
 Set-Alias -Name pd      -Value Move-MyPSCurrentDirectory
 Set-Alias -Name syntax  -Value Get-MyPSCommandSyntax
