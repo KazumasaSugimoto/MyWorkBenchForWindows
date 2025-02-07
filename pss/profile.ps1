@@ -175,8 +175,21 @@ function Get-MyPSFileInfo
     $fileInfo = Get-Item -Path $FilePath
     $fileHash = Get-FileHash -Path $FilePath -Algorithm $HashAlgorithm
 
+    if ($PSVersionTable.PSVersion.Major -le 5)
+    {
+        $headByte = Get-Content -Path $FilePath -Encoding Byte -Head 1
+        $tailByte = Get-Content -Path $FilePath -Encoding Byte -Tail 1
+    }
+    else
+    {
+        $headByte = Get-Content -Path $FilePath -AsByteStream -Head 1
+        $tailByte = Get-Content -Path $FilePath -AsByteStream -Tail 1
+    }
+
     $MyPSNotes = [PSCustomObject]@{
         RawPath = $FilePath
+        HeadByte = $headByte
+        TailByte = $tailByte
         Hash = @{
             $HashAlgorithm = $fileHash.Hash.ToLower()
         }
