@@ -239,17 +239,36 @@ function Get-MyPSLeafFolders
     (
         [Parameter(Position=0)]
         [String]
-        $FolderPath = '.'
+        $BaseFolderPath = '.'
     )
 
     $prevFolder = ''
-    (cmd /c "cd ""$FolderPath"" & dir /ad /b /s | sort /r") |
+    (cmd /c "cd ""$BaseFolderPath"" & dir /ad /b /s | sort /r") |
         ForEach-Object {
             if ($prevFolder -notlike "$_*") 
             {
                 Write-Output $_
             }
             $prevFolder = $_
+        }
+}
+
+function Get-MyPSEmptyFolders
+{
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $BaseFolderPath = '.'
+    )
+
+    Get-MyPSLeafFolders -BaseFolderPath $BaseFolderPath |
+        ForEach-Object {
+            $folderInfo = Get-Item -Path $_
+            if ($folderInfo.GetFiles().Count -eq 0)
+            {
+                Write-Output $_
+            }
         }
 }
 
