@@ -67,8 +67,7 @@ set HISTORY_CLONE_PATH=%TEMP%\History.Snapshot
 
 copy "%BROWSER_HISTORY_PATH%" "%HISTORY_CLONE_PATH%" >nul
 
-set /p SQL=<"%~dp0conf\%~n0.sql"
-sqlite3 "%HISTORY_CLONE_PATH%" ".www" "%SQL%"
+sqlite3 "%HISTORY_CLONE_PATH%" ".www" ".read '%~dp0conf\%~n0.sql'"
 
 del "%HISTORY_CLONE_PATH%"
 
