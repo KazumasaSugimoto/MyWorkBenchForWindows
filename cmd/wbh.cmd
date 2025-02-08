@@ -2,10 +2,12 @@
 
 rem Web Browse History
 
-for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-self -es  /es  :es` ) do if /i "%~1" equ "%%a" goto EDIT_SELF
-for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-sql  -sql /sql :sql`) do if /i "%~1" equ "%%a" goto EDIT_SQL
+for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
 
 setlocal EnableDelayedExpansion
+
+set SQL_FILE_PATH=%~dp0conf\%~n0.sql
+for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-sql -sql /sql :sql`) do if /i "%~1" equ "%%a" goto EDIT_SQL
 
 echo -------------------------------------------------------------------------------
 echo Web Browse History
@@ -67,7 +69,7 @@ set HISTORY_CLONE_PATH=%TEMP%\History.Snapshot
 
 copy "%BROWSER_HISTORY_PATH%" "%HISTORY_CLONE_PATH%" >nul
 
-sqlite3 "%HISTORY_CLONE_PATH%" ".www" ".read '%~dp0conf\%~n0.sql'"
+sqlite3 "%HISTORY_CLONE_PATH%" ".www" ".read '%SQL_FILE_PATH%'"
 
 del "%HISTORY_CLONE_PATH%"
 
@@ -80,5 +82,5 @@ exit /b 0
 
 :EDIT_SQL
 
-call code.cmd "%~dp0conf\%~n0.sql"
+call code.cmd "%SQL_FILE_PATH%"
 exit /b 0
