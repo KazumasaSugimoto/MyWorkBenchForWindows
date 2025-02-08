@@ -99,6 +99,11 @@ set HISTORY_CLONE_PATH=%TEMP%\History.Snapshot
 
 copy "%BROWSER_HISTORY_PATH%" "%HISTORY_CLONE_PATH%" >nul
 
+sqlite3 "%HISTORY_CLONE_PATH%" "CREATE TABLE ignore_urls ( url TEXT );"
+sqlite3 "%HISTORY_CLONE_PATH%" "INSERT INTO ignore_urls values ( 'file:///%%' );"
+sqlite3 "%HISTORY_CLONE_PATH%" "INSERT INTO ignore_urls values ( 'http_://localhost' );"
+sqlite3 "%HISTORY_CLONE_PATH%" "INSERT INTO ignore_urls values ( 'http_://localhost/%%' );"
+sqlite3 "%HISTORY_CLONE_PATH%" "INSERT INTO ignore_urls values ( 'http_://localhost:%%/%%' );"
 sqlite3 "%HISTORY_CLONE_PATH%" "%OUTPUT_METHOD%" ".read '%SQL_FILE_PATH%'"
 
 del "%HISTORY_CLONE_PATH%"
