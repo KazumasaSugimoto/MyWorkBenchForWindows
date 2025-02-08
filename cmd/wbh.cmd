@@ -13,6 +13,16 @@ echo ---------------------------------------------------------------------------
 echo Web Browse History
 echo -------------------------------------------------------------------------------
 
+where sqlite3 >nul 2>&1
+if ERRORLEVEL 1 (
+    echo "sqlite3" is required to execute this script.
+    echo How to install:
+    echo    winget install SQLite.SQLite
+    echo      or
+    echo    scoop install sqlite 
+    exit /b 1
+)
+
 :SHOW_MENU_FOR_SELECT_BROWSER
 
 echo.
