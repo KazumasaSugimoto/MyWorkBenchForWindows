@@ -26,7 +26,7 @@ if ERRORLEVEL 1 (
 :SHOW_MENU_FOR_SELECT_BROWSER
 
 echo.
-echo Select browser:
+echo Select Browser:
 echo     1. Microsoft Edge
 echo     2. Google Chrome
 echo    -1. Exit
@@ -72,6 +72,26 @@ if %ANS_NUM% lss 0 exit /b 0
 if %ANS_NUM% equ 0 goto SELECT_PROFILE
 if %ANS_NUM% gtr %PROFILES_COUNT% goto SELECT_PROFILE
 
+:SHOW_MENU_FOR_SELECT_OUTPUT_MEHTOD
+
+echo.
+echo Select Output Method:
+echo     1. Default browser
+echo     2. Excel
+echo    -1. Exit
+
+:SELECT_OUTPUT_METHOD
+
+set ANS_NUM=
+set /p ANS_NUM="? > "
+set /a ANS_NUM+=0
+
+if %ANS_NUM% lss 0 exit /b 0
+set OUTPUT_MEHOD=
+if %ANS_NUM% equ 1 set OUTPUT_METHOD=.www
+if %ANS_NUM% equ 2 set OUTPUT_METHOD=.excel
+if not defined OUTPUT_METHOD goto SELECT_OUTPUT_METHOD
+
 :PUT_HISTORY
 
 set BROWSER_HISTORY_PATH=%BROWSER_PROFILE_PATH%!PROFILE_NAMES[%ANS_NUM%]!\History
@@ -79,7 +99,7 @@ set HISTORY_CLONE_PATH=%TEMP%\History.Snapshot
 
 copy "%BROWSER_HISTORY_PATH%" "%HISTORY_CLONE_PATH%" >nul
 
-sqlite3 "%HISTORY_CLONE_PATH%" ".www" ".read '%SQL_FILE_PATH%'"
+sqlite3 "%HISTORY_CLONE_PATH%" "%OUTPUT_METHOD%" ".read '%SQL_FILE_PATH%'"
 
 del "%HISTORY_CLONE_PATH%"
 
