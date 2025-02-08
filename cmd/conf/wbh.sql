@@ -1,10 +1,16 @@
 -- Web Browse History
 SELECT
-    datetime(last_visit_time / 1000000 - 11644473600, 'unixepoch', 'localtime') AS  last_visit_time
-,   title
-,   url
+    datetime(u.last_visit_time / 1000000 - 11644473600, 'unixepoch', 'localtime')   AS  last_visit_time
+,   u.title
+,   u.url
 FROM
-    urls
+    urls        u
+LEFT OUTER JOIN
+    ignore_urls i
+ON
+        u.url   LIKE    i.url
+WHERE
+        i.url   IS      NULL
 ORDER BY
-    last_visit_time DESC
+    u.last_visit_time   DESC
 ;
