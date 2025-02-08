@@ -1,0 +1,4 @@
+file:///%
+http_://localhost
+http_://localhost/%
+http_://localhost:%
