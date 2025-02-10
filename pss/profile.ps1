@@ -247,7 +247,7 @@ function Get-MyPSLeafFolders
         $BaseFolderPath = '.'
     )
 
-    $subFolders = (cmd /c "cd ""$BaseFolderPath"" & dir /ad /b /s") 
+    $subFolders = (cmd /c "cd ""$BaseFolderPath"" & dir /ad /b /s")
 
     if ($subFolders -eq $nul)
     {
