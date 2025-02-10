@@ -251,7 +251,7 @@ function Get-MyPSLeafFolders
 
     if ($subFolders -eq $nul)
     {
-        (Get-Item -Path $BaseFolderPath).FullName
+        (Get-Item -Path $BaseFolderPath -Force).FullName
         return
     }
 
@@ -278,7 +278,7 @@ function Get-MyPSEmptyFolders
 
     Get-MyPSLeafFolders -BaseFolderPath $BaseFolderPath |
         ForEach-Object {
-            $folderInfo = Get-Item -Path $_
+            $folderInfo = Get-Item -Path $_ -Force
             if ($folderInfo.GetFiles().Count -eq 0)
             {
                 Write-Output $_
