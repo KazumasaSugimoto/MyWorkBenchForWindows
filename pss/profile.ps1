@@ -247,9 +247,16 @@ function Get-MyPSLeafFolders
         $BaseFolderPath = '.'
     )
 
+    $subFolders = (cmd /c "cd ""$BaseFolderPath"" & dir /ad /b /s") 
+
+    if ($subFolders -eq $nul)
+    {
+        (Get-Item -Path $BaseFolderPath).FullName
+        return
+    }
+
     $prevFolder = ''
-    (cmd /c "cd ""$BaseFolderPath"" & dir /ad /b /s") |
-        Sort-Object -Descending |
+    Sort-Object -InputObject $subFolders -Descending |
         ForEach-Object {
             if ($prevFolder -notlike "$_*")
             {
