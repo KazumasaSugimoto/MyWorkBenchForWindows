@@ -160,6 +160,18 @@ function Set-MyPSWindowTitle
     (Get-Host).UI.RawUI.WindowTitle = $WindowTitle
 }
 
+function Get-MyPSByteOption
+{
+    if ($PSVersionTable.PSVersion.Major -le 5)
+    {
+        return @{ Encoding = 'Byte' }
+    }
+    else
+    {
+        return @{ AsByteStream = $true }
+    }
+}
+
 function Get-MyPSFileInfo
 {
     param
@@ -175,16 +187,9 @@ function Get-MyPSFileInfo
     $fileInfo = Get-Item -Path $FilePath
     $fileHash = Get-FileHash -Path $FilePath -Algorithm $HashAlgorithm
 
-    if ($PSVersionTable.PSVersion.Major -le 5)
-    {
-        $headByte = Get-Content -Path $FilePath -Encoding Byte -Head 1
-        $tailByte = Get-Content -Path $FilePath -Encoding Byte -Tail 1
-    }
-    else
-    {
-        $headByte = Get-Content -Path $FilePath -AsByteStream -Head 1
-        $tailByte = Get-Content -Path $FilePath -AsByteStream -Tail 1
-    }
+    $byteReadOption = Get-MyPSByteOption
+    $headByte = Get-Content -Path $FilePath @byteReadOption -Head 1
+    $tailByte = Get-Content -Path $FilePath @byteReadOption -Tail 1
 
     $myPSNotes = [PSCustomObject]@{
         RawPath = $FilePath
