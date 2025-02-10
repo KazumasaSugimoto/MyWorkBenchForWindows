@@ -127,7 +127,7 @@ function Get-MyPSWindowTitle
     .SYNOPSIS
         Put host window title.
 #>
-    (Get-Host).UI.RawUI.WindowTitle
+    Write-Output (Get-Host).UI.RawUI.WindowTitle
 }
 
 function Set-MyPSWindowTitle
@@ -186,7 +186,7 @@ function Get-MyPSFileInfo
         $tailByte = Get-Content -Path $FilePath -AsByteStream -Tail 1
     }
 
-    $MyPSNotes = [PSCustomObject]@{
+    $myPSNotes = [PSCustomObject]@{
         RawPath = $FilePath
         HeadByte = $headByte
         TailByte = $tailByte
@@ -195,7 +195,7 @@ function Get-MyPSFileInfo
         }
     }
 
-    Add-Member -InputObject $fileInfo -NotePropertyName MyPSNotes -NotePropertyValue $MyPSNotes
+    Add-Member -InputObject $fileInfo -NotePropertyName MyPSNotes -NotePropertyValue $myPSNotes
 
     return $fileInfo
 }
@@ -246,7 +246,7 @@ function Get-MyPSLeafFolders
     (cmd /c "cd ""$BaseFolderPath"" & dir /ad /b /s") |
         Sort-Object -Descending |
         ForEach-Object {
-            if ($prevFolder -notlike "$_*") 
+            if ($prevFolder -notlike "$_*")
             {
                 Write-Output $_
             }
