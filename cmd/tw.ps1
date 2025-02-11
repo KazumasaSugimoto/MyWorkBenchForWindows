@@ -55,6 +55,19 @@ $textRows = Get-Content -Path $FilePath -Encoding $Encoding
 foreach ($textRow in $textRows)
 {
     $rowNum++
+    # check odd indent.
+    if ($textRow -match '^(?<Indent> *)[^ ]*')
+    {
+        $length = $Matches['Indent'].Length
+        $remain = $length % 2
+        if ($remain -ne 0)
+        {
+            [PSCustomObject]@{
+                Line = $rowNum
+                Warning = "Odd indent. { Length: $length }"
+            }
+        }
+    }
     # check before EOL.
     if ($textRow.EndsWith(' '))
     {
