@@ -8,7 +8,9 @@ param
     $FilePath,
     [Parameter()]
     [String]
-    $Encoding = 'OEM'
+    $Encoding = 'OEM',
+    [switch]
+    $DoNotUseTabs
 )
 
 $byteReadOption = Get-MyPSByteOption
@@ -66,6 +68,14 @@ foreach ($textRow in $textRows)
                 Line = $rowNum
                 Warning = "Odd indent. { Length: $length }"
             }
+        }
+    }
+    # check for don't use tabs.
+    if ($DoNotUseTabs -and $textRow -like "*`t*")
+    {
+        [PSCustomObject]@{
+            Line = $rowNum
+            Warning = 'TAB(0x09) included.'
         }
     }
     # check before EOL.
