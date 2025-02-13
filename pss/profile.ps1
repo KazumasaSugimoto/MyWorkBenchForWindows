@@ -65,11 +65,17 @@ function Get-MyPSCommandSyntax
 
     if ($Parameter -eq '')
     {
-        Get-Command -Name $Name -Syntax
+        $paramSets = (Get-Command -Name $Name).ParameterSets
+        foreach ($paramSet in $paramSets)
+        {
+            Write-Output "`n$($paramSet.Name):"
+            Write-Output "`n$Name $($paramSet.ToString())"
+        }
         $retVals = Get-Help -Name $Name |
             Select-Object -ExpandProperty returnValues -ErrorAction Ignore
         if ($retVals -ne $nul)
         {
+            Write-Output "`nReturnValues:"
             Write-Output $retVals
         }
     }
