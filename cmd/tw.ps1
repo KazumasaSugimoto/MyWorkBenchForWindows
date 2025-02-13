@@ -54,6 +54,7 @@ if ($headBytes.Count -ge 3)
 
 # check line by line.
 $textRows = Get-Content -Path $FilePath -Encoding $Encoding
+$prevRow = 'dummy'
 foreach ($textRow in $textRows)
 {
     $rowNum++
@@ -93,6 +94,16 @@ foreach ($textRow in $textRows)
             Warning = 'not printable char included just before EOL. { TAB(0x09) }'
         }
     }
+    # check verbose blank lines.
+    if ([String]::IsNullOrWhiteSpace($prevRow) -and
+        [String]::IsNullOrWhiteSpace($textRow))
+    {
+        [PSCustomObject]@{
+            Line = $rowNum
+            Warning = 'verbose blank line.'
+        }
+    }
+    $prevRow = $textRow
 }
 
 # check before EOF.
@@ -100,6 +111,6 @@ if ($tailByte -ne 0x0A)
 {
     [PSCustomObject]@{
         Line = $rowNum
-        Warning = 'LF(0x0A) missing before EOF.'
+        Warning = 'LF(0x0A) is missing before EOF.'
     }
 }
