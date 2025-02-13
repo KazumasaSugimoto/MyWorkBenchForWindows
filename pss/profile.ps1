@@ -49,7 +49,9 @@ function Get-MyPSCommandSyntax
         $Name,
         [Parameter(Position=1)]
         [String]
-        $Parameter = ''
+        $Parameter = '',
+        [switch]
+        $ReturnValues
     )
 
     $result = Get-Command -Name $Name
@@ -71,13 +73,17 @@ function Get-MyPSCommandSyntax
             Write-Output "`n$($paramSet.Name):"
             Write-Output "`n$Name $($paramSet.ToString())"
         }
-        $retVals = Get-Help -Name $Name |
-            Select-Object -ExpandProperty returnValues -ErrorAction Ignore
-        if ($retVals -ne $nul)
+        if ($ReturnValues)
         {
-            Write-Output "`nReturnValues:"
-            Write-Output $retVals
+            $retVals = Get-Help -Name $Name |
+                Select-Object -ExpandProperty returnValues -ErrorAction Ignore
+            if ($retVals -ne $nul)
+            {
+                Write-Output "`nReturnValues:"
+                Write-Output $retVals
+            }
         }
+        Write-Output ''
     }
     elseif ($Parameter -eq '?')
     {
