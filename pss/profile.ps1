@@ -249,9 +249,9 @@ function Get-MyPSLeafFolders
 
     $subFolders = (cmd /c "cd ""$BaseFolderPath"" & dir /ad /b /s")
 
-    if ($subFolders -eq $nul)
+    if ($nul -eq $subFolders)
     {
-        (Get-Item -Path $BaseFolderPath -Force).FullName
+        Write-Output (Get-Item -Path $BaseFolderPath -Force).FullName
         return
     }
 
