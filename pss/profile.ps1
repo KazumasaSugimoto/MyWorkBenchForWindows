@@ -250,6 +250,32 @@ function Get-MyPSTextFileInfo
     return $fileInfo
 }
 
+function Get-MyPSPathLengthWarning
+{
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $BaseFolderPath = '.',
+        [int]
+        $LimitLength = 240
+    )
+
+    $sjisEncoding = [Text.Encoding]::GetEncoding('shift_jis')
+    $items = (cmd /c "cd ""$BaseFolderPath"" & dir /a- /b /s *")
+
+    foreach ($item in $items)
+    {
+        $sjisBytes = $sjisEncoding.GetBytes($item)
+        $length = $sjisBytes.Length
+        if ($length -le $LimitLength) { continue }
+        [PSCustomObject]@{
+            Length = $length
+            Path = $item
+        }
+    }
+}
+
 function Get-MyPSLeafFolders
 {
     param
