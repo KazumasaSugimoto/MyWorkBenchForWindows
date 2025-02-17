@@ -9,8 +9,10 @@ param
     [Parameter(Position=0)]
     [String]
     $TextFilePath,
+    [Parameter(Position=1)]
     [String]
     $SourceEncodingName = 'UTF-8',
+    [Parameter(Position=2)]
     [String]
     $TargetEncodingName = 'shift_jis'
 )
