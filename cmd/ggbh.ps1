@@ -18,11 +18,10 @@ param
 try
 {
     $fileInfo = [FileInfo]::new($FilePath)
-    $gitBlobHeaderBytes = [Encoding]::ASCII.GetBytes("blob $($FileInfo.Length)")
+    $gitBlobHeaderBytes = [Encoding]::ASCII.GetBytes("blob $($FileInfo.Length)$([char]0x00)")
 
     $memoryStream = [MemoryStream]::new()
     $memoryStream.Write($gitBlobHeaderBytes, 0, $gitBlobHeaderBytes.Length)
-    $memoryStream.WriteByte(0x00)
 
     $fileStream = $fileInfo.OpenRead()
     $fileStream.CopyTo($memoryStream)
