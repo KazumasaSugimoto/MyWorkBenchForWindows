@@ -18,7 +18,7 @@ param
 try
 {
     $fileInfo = [FileInfo]::new($FilePath)
-    $gitBlobHeaderBytes = [Encoding]::ASCII.GetBytes("blob $($FileInfo.Length)$([char]0x00)")
+    $gitBlobHeaderBytes = [Encoding]::ASCII.GetBytes("blob $($FileInfo.Length)`0")
 
     $memoryStream = [MemoryStream]::new()
     $memoryStream.Write($gitBlobHeaderBytes, 0, $gitBlobHeaderBytes.Length)
