@@ -1,6 +1,31 @@
 @echo off
 
-rem pushd / popd helper
+rem -------------------------------------------------------------------------------
+rem pushd / popd operation helper
+rem -------------------------------------------------------------------------------
+rem 
+rem usage:
+rem 
+rem     --- pushd mode ---
+rem 
+rem     pd[.cmd] destination
+rem         destination: folder path -> tag name -> environment variable name
+rem 
+rem     --- popd mode ---
+rem 
+rem     pd[.cmd]
+rem 
+rem     --- current directory tagging mode ---
+rem 
+rem     pd[.cmd] . tag-name
+rem 
+rem     --- tag remove mode ---
+rem 
+rem     pd[.cmd] / tag-name
+rem 
+rem     --- help mode ---
+rem 
+rem     pd[.cmd] ?
 
 if "%~1" equ ""  goto POPD_MODE
 if "%~1" equ "." goto TAGGING_MODE
@@ -109,31 +134,5 @@ exit /b 0
 
 :HELP_MODE
 
-echo -------------------------------------------------------------------------------
-echo pushd / popd helper
-echo -------------------------------------------------------------------------------
-echo.
-echo usage:
-echo.
-echo     --- pushd mode ---
-echo.
-echo     %~n0[%~x0] destination
-echo         destination: folder path -^> tag name -^> environment variable name
-echo.
-echo     --- popd mode ---
-echo.
-echo     %~n0[%~x0]
-echo.
-echo     --- current directory tagging mode ---
-echo.
-echo     %~n0[%~x0] . tag-name
-echo.
-echo     --- tag remove mode ---
-echo.
-echo     %~n0[%~x0] / tag-name
-echo.
-echo     --- help mode ---
-echo.
-echo     %~n0[%~x0] ?
-
+call bshelp.cmd "%~f0"
 exit /b 0
