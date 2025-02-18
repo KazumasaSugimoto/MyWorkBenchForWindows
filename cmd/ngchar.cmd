@@ -2,4 +2,4 @@
 
 rem NG Char Checker
 
-powershell -File "%~dpn0.ps1" %*
+ps.cmd -File "%~dpn0.ps1" %*
