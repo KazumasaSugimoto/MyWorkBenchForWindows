@@ -1,5 +1,22 @@
 @echo off
 
+rem Start with administrator privileges
+rem 
+rem usage:
+rem     sudo[.cmd] <sub-command>
+rem 
+rem sub-commands:
+rem     cmd
+rem         Start Command Prompt `cmd.exe`
+rem     ps5 | wps
+rem         Start Windows PowerShell `powershell.exe`
+rem     ps7 | ps
+rem         Start PowerShell `pwsh.exe`
+rem     --help | /help | -? | /?
+rem         Show Help
+rem     --edit-self | -es | /es | :es
+rem         Edit this source code.
+
 setlocal
 
 set HELP_OPTION=--help /help -? /?
@@ -29,23 +46,7 @@ goto :EOF
 
 :SHOW_HELP
 
-echo Start with administrator privileges
-echo.
-echo USAGE:
-echo     %~n0[%~x0] ^<sub-command^>
-echo.
-echo SUB-COMMANDS:
-echo     cmd
-echo         Start Command Prompt `cmd.exe`
-echo     ps5 ^| wps
-echo         Start Windows PowerShell `powershell.exe`
-echo     ps7 ^| ps
-echo         Start PowerShell `pwsh.exe`
-echo     %HELP_OPTION: = ^| %
-echo         Show Help
-echo     %EDIT_OPTION: = ^| %
-echo         Edit this source code.
-
+call bshelp.cmd "%~f0"
 exit /b 0
 
 :EDIT_SELF
