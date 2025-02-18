@@ -2,4 +2,4 @@
 
 rem Get Git Blob Hash
 
-powershell -File "%~dpn0.ps1" %*
+ps.cmd -File "%~dpn0.ps1" %*
