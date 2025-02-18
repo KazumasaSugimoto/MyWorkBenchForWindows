@@ -1,5 +1,17 @@
 @echo off
 
+rem -------------------------------------------------------------------------------
+rem Upstream Dir - the opposite of `dir /s`
+rem -------------------------------------------------------------------------------
+rem 
+rem usage:
+rem 
+rem     updir[.cmd] [path]file-name
+rem 
+rem example:
+rem 
+rem     updir .gitignore
+
 if "%~1" equ "" goto SHOW_HELP
 for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
 
@@ -34,16 +46,5 @@ exit /b 0
 
 :SHOW_HELP
 
-echo -------------------------------------------------------------------------------
-echo Upstream Dir - the opposite of `dir /s`
-echo -------------------------------------------------------------------------------
-echo.
-echo usage:
-echo.
-echo     %~n0[%~x0] [path]file-name
-echo.
-echo example:
-echo.
-echo     %~n0 .gitignore
-
+call bshelp.cmd "%~f0"
 exit /b 1
