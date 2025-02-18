@@ -16,5 +16,7 @@ if not exist "%~f1" (
     exit /b 1
 )
 
+call del-path.cmd "%~f1" 2>nul
+
 set PATH=%~f1;%PATH%
 exit /b 0
