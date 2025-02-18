@@ -2,4 +2,4 @@
 
 rem Get Git Alias
 
-powershell -File "%~dpn0.ps1" %*
+ps.cmd -File "%~dpn0.ps1" %*
