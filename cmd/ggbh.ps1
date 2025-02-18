@@ -18,7 +18,7 @@ param
 try
 {
     $fileInfo = [FileInfo]::new($FilePath)
-    $gitBlobHeaderBytes = [Encoding]::ASCII.GetBytes("blob $($FileInfo.Length)`0")
+    $gitBlobHeaderBytes = [Encoding]::ASCII.GetBytes("blob $($fileInfo.Length)`0")
 
     $memoryStream = [MemoryStream]::new()
     $memoryStream.Write($gitBlobHeaderBytes, 0, $gitBlobHeaderBytes.Length)
@@ -35,7 +35,7 @@ try
 }
 catch
 {
-    Throw
+    throw
 }
 finally
 {
