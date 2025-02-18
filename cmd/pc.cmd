@@ -1,5 +1,20 @@
 @echo off
 
+rem -------------------------------------------------------------------------------
+rem `shutdown` command helper
+rem -------------------------------------------------------------------------------
+rem 
+rem usage:
+rem 
+rem     pc[.cmd] sub-command
+rem 
+rem sub-command:
+rem 
+rem     poweroff | off | shutdown | down
+rem     suspend | sleep | zzz
+rem     reboot
+rem     logout | signout | out | logoff
+
 for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
 
 setlocal
@@ -21,20 +36,7 @@ if defined SHUTDOWN_OPTIONS (
     exit /b 0
 )
 
-echo -------------------------------------------------------------------------------
-echo `shutdown` command helper
-echo -------------------------------------------------------------------------------
-echo.
-echo usage:
-echo.
-echo     %~n0[%~x0] sub-command
-echo.
-echo sub-command:
-echo.
-echo     %SUBCMDS_POWEROFF: = ^| %
-echo     %SUBCMDS_SUSPEND: = ^| %
-echo     %SUBCMDS_REBOOT: = ^| %
-echo     %SUBCMDS_LOGOUT: = ^| %
+call bshelp.cmd "%~f0"
 echo.
 
 :SELECT_SUBCMD
