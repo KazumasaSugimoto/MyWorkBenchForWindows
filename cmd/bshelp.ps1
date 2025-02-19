@@ -10,7 +10,7 @@ param
 
 Get-Content -Path $BatchFilePath -Encoding OEM |
     ForEach-Object {
-        if ($_ -match '^rem( ?(?<HelpMessage>.*))')
+        if ($_ -match '^\s*@?rem( ?(?<HelpMessage>.*))')
         {
             Write-Output $Matches['HelpMessage']
         }
