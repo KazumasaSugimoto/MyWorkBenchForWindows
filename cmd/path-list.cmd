@@ -3,21 +3,21 @@
 rem -------------------------------------------------------------------------------
 rem Path String Splitter
 rem -------------------------------------------------------------------------------
-rem 
+rem
 rem usage:
-rem 
+rem
 rem     path-list[.cmd] [ environment-variable | path-string ]
-rem 
+rem
 rem example:
-rem 
+rem
 rem     path-list
-rem 
+rem
 rem        same result:
 rem            path-list PATH
 rem            path-list "%PATH%"
-rem 
+rem
 rem     path-list ";path1;;path2;;;path3;;;;"
-rem 
+rem
 rem        path1
 rem        path2
 rem        path3
