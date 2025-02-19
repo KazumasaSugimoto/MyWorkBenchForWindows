@@ -22,7 +22,7 @@ if ERRORLEVEL 1 (
     echo How to install:
     echo    winget install SQLite.SQLite
     echo      or
-    echo    scoop install sqlite 
+    echo    scoop install sqlite
     exit /b 1
 )
 
