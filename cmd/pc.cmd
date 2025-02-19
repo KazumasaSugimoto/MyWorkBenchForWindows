@@ -3,13 +3,13 @@
 rem -------------------------------------------------------------------------------
 rem `shutdown` command helper
 rem -------------------------------------------------------------------------------
-rem 
+rem
 rem usage:
-rem 
+rem
 rem     pc[.cmd] sub-command
-rem 
+rem
 rem sub-command:
-rem 
+rem
 rem     poweroff | off | shutdown | down
 rem     suspend | sleep | zzz
 rem     reboot
