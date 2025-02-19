@@ -2,7 +2,7 @@
 
 rem PowerShell Invoker
 
-:TRY_DEFAULT
+:TRY_MY_DEFAULT
 
 if not defined MYDEF_PSEXE goto TRY_NEW_VERSION
 
