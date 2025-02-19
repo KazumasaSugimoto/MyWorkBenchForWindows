@@ -1,10 +1,10 @@
 @echo off
 
 rem Start with administrator privileges
-rem 
+rem
 rem usage:
 rem     sudo[.cmd] <sub-command>
-rem 
+rem
 rem sub-commands:
 rem     cmd
 rem         Start Command Prompt `cmd.exe`
