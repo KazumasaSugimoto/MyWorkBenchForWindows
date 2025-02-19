@@ -3,28 +3,28 @@
 rem -------------------------------------------------------------------------------
 rem pushd / popd operation helper
 rem -------------------------------------------------------------------------------
-rem 
+rem
 rem usage:
-rem 
+rem
 rem     --- pushd mode ---
-rem 
+rem
 rem     pd[.cmd] destination
 rem         destination: folder path -> tag name -> environment variable name
-rem 
+rem
 rem     --- popd mode ---
-rem 
+rem
 rem     pd[.cmd]
-rem 
+rem
 rem     --- current directory tagging mode ---
-rem 
+rem
 rem     pd[.cmd] . tag-name
-rem 
+rem
 rem     --- tag remove mode ---
-rem 
+rem
 rem     pd[.cmd] / tag-name
-rem 
+rem
 rem     --- help mode ---
-rem 
+rem
 rem     pd[.cmd] ?
 
 if "%~1" equ ""  goto POPD_MODE
