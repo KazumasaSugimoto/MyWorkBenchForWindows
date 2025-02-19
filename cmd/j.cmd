@@ -9,7 +9,7 @@ for /f "usebackq tokens=1" %%a in (`echor.cmd --edit-list -el /el :el`) do if /i
 for /f "usebackq eol=# tokens=1,2*" %%a in (`find /i "%~1" "%~dp0conf\%~n0.lst"`) do (
     if /i "%~1" equ "%%a" (
         call :%%b_CASE "%%c"
-    )    
+    )
 )
 goto :EOF
 
