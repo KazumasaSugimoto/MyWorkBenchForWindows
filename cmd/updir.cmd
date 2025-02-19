@@ -3,13 +3,13 @@
 rem -------------------------------------------------------------------------------
 rem Upstream Dir - the opposite of `dir /s`
 rem -------------------------------------------------------------------------------
-rem 
+rem
 rem usage:
-rem 
+rem
 rem     updir[.cmd] [path]file-name
-rem 
+rem
 rem example:
-rem 
+rem
 rem     updir .gitignore
 
 if "%~1" equ "" goto SHOW_HELP
