@@ -190,7 +190,10 @@ function Get-MyPSFolderInfo
     (
         [Parameter(Position=0)]
         [String]
-        $FolderPath
+        $FolderPath,
+        [Parameter()]
+        [int]
+        $Depth = 0
     )
 
     $folderInfo = Get-Item -Path $FolderPath -Force
@@ -200,6 +203,7 @@ function Get-MyPSFolderInfo
         FilesCount = 0
         FoldersCount = 0
         Size = 0
+        Depth = $Depth
     }
 
     $folderInfo.GetFiles() |
@@ -211,10 +215,13 @@ function Get-MyPSFolderInfo
     $folderInfo.GetDirectories() |
         ForEach-Object {
             $myPSNotes.FoldersCount++
-            $subFolderInfo = Get-MyPSFolderInfo -FolderPath $_.FullName
+            $subFolderInfo = Get-MyPSFolderInfo -FolderPath $_.FullName -Depth ($Depth + 1)
             $myPSNotes.FilesCount += $subFolderInfo.MyPSNotes.FilesCount
             $myPSNotes.FoldersCount += $subFolderInfo.MyPSNotes.FoldersCount
             $myPSNotes.Size += $subFolderInfo.MyPSNotes.Size
+            if ($myPSNotes.Depth -lt $subFolderInfo.MyPSNotes.Depth) {
+                $myPsNotes.Depth = $subFolderInfo.MyPsNotes.Depth
+            }
         }
 
     Add-Member -InputObject $folderInfo -NotePropertyName MyPSNotes -NotePropertyValue $myPSNotes
