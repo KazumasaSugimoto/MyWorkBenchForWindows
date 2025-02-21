@@ -1,6 +1,23 @@
 @echo off
 
+rem -------------------------------------------------------------------------------
 rem Outputs all sort orders of nodes.
+rem -------------------------------------------------------------------------------
+rem usage:
+rem     nodex[.cmd] literal [separator]
+rem literal:
+rem     e.g. "a.b.c"
+rem separator:
+rem     e.g. "." ( default: "." )
+rem example:
+rem     nodex 1.2.3
+rem         result:
+rem             1.2.3
+rem             1.3.2
+rem             2.1.3
+rem             2.3.1
+rem             3.1.2
+rem             3.2.1
 
 if "%~1" equ "" goto SHOW_HELP
 for /f "usebackq tokens=*" %%a in (`echor.cmd --edit-self -es /es :es`) do if /i "%~1" equ "%%a" goto EDIT_SELF
@@ -44,31 +61,5 @@ exit /b 0
 
 :SHOW_HELP
 
-echo -------------------------------------------------------------------------------
-echo Outputs all sort orders of nodes.
-echo -------------------------------------------------------------------------------
-echo.
-echo usage:
-echo.
-echo     %~n0[%~x0] literal [separator]
-echo.
-echo literal:
-echo.
-echo     e.g. "a.b.c"
-echo.
-echo separator:
-echo.
-echo     e.g. "." ( default: "." )
-echo.
-echo example:
-echo.
-echo     %~n0 1.2.3
-echo.
-echo         1.2.3
-echo         1.3.2
-echo         2.1.3
-echo         2.3.1
-echo         3.1.2
-echo         3.2.1
-
+call bshelp.cmd "%~f0"
 exit /b 1
