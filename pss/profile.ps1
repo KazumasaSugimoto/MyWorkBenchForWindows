@@ -184,6 +184,44 @@ function Get-MyPSByteOption
     }
 }
 
+function Get-MyPSFolderInfo
+{
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $FolderPath
+    )
+
+    $folderInfo = Get-Item -Path $FolderPath -Force
+
+    $myPSNotes = [PSCustomObject]@{
+        RawPath = $FolderPath
+        FilesCount = 0
+        FoldersCount = 0
+        Size = 0
+    }
+
+    $folderInfo.GetFiles() |
+        ForEach-Object {
+            $myPSNotes.FilesCount++
+            $myPSNotes.Size += $_.Length
+        }
+
+    $folderInfo.GetDirectories() |
+        ForEach-Object {
+            $myPSNotes.FoldersCount++
+            $subFolderInfo = Get-MyPSFolderInfo -FolderPath $_.FullName
+            $myPSNotes.FilesCount += $subFolderInfo.MyPSNotes.FilesCount
+            $myPSNotes.FoldersCount += $subFolderInfo.MyPSNotes.FoldersCount
+            $myPSNotes.Size += $subFolderInfo.MyPSNotes.Size
+        }
+
+    Add-Member -InputObject $folderInfo -NotePropertyName MyPSNotes -NotePropertyValue $myPSNotes
+
+    return $folderInfo
+}
+
 function Get-MyPSFileInfo
 {
     param
@@ -196,7 +234,7 @@ function Get-MyPSFileInfo
         $HashAlgorithm = 'SHA1'
     )
 
-    $fileInfo = Get-Item -Path $FilePath
+    $fileInfo = Get-Item -Path $FilePath -Force
     $fileHash = Get-FileHash -Path $FilePath -Algorithm $HashAlgorithm
 
     $byteReadOption = Get-MyPSByteOption
