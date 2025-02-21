@@ -45,7 +45,7 @@ set /a DEPTH+=1
 for /l %%i in ( 1, 1, %COUNT% ) do (
     if not defined USED_FLG_%%i (
         set RESULT=%RESULT% %%i
-        set USED_FLG_%%i=True
+        set USED_FLG_%%i=defined - this value can be anything.
         if %COUNT% equ %DEPTH% (
             echo.!RESULT:~1!
         ) else (
