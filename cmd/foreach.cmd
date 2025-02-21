@@ -25,6 +25,7 @@ if not defined TARGETS (
 set INSTRUCTION=%~2
 if not defined INSTRUCTION set INSTRUCTION=echo
 
+set TARGETS=%TARGETS:/=\%
 for %%f in ( %TARGETS% ) do call :EXECUTE "%%~f"
 
 echo.
