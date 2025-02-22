@@ -204,25 +204,41 @@ function Get-MyPSFolderInfo
         FoldersCount = 0
         Size = 0
         Depth = $Depth
+        Exceptions = [System.Collections.Generic.List[String]]::new()
     }
 
-    $folderInfo.GetFiles() |
-        ForEach-Object {
-            $myPSNotes.FilesCount++
-            $myPSNotes.Size += $_.Length
-        }
-
-    $folderInfo.GetDirectories() |
-        ForEach-Object {
-            $myPSNotes.FoldersCount++
-            $subFolderInfo = Get-MyPSFolderInfo -FolderPath $_.FullName -Depth ($Depth + 1)
-            $myPSNotes.FilesCount += $subFolderInfo.MyPSNotes.FilesCount
-            $myPSNotes.FoldersCount += $subFolderInfo.MyPSNotes.FoldersCount
-            $myPSNotes.Size += $subFolderInfo.MyPSNotes.Size
-            if ($myPSNotes.Depth -lt $subFolderInfo.MyPSNotes.Depth) {
-                $myPsNotes.Depth = $subFolderInfo.MyPsNotes.Depth
+    try
+    {
+        $folderInfo.GetFiles() |
+            ForEach-Object {
+                $myPSNotes.FilesCount++
+                $myPSNotes.Size += $_.Length
             }
-        }
+    }
+    catch
+    {
+        $myPSNotes.Exceptions.Add($_)
+    }
+
+    try
+    {
+        $folderInfo.GetDirectories() |
+            ForEach-Object {
+                $myPSNotes.FoldersCount++
+                $subFolderInfo = Get-MyPSFolderInfo -FolderPath $_.FullName -Depth ($Depth + 1)
+                $myPSNotes.FilesCount += $subFolderInfo.MyPSNotes.FilesCount
+                $myPSNotes.FoldersCount += $subFolderInfo.MyPSNotes.FoldersCount
+                $myPSNotes.Size += $subFolderInfo.MyPSNotes.Size
+                if ($myPSNotes.Depth -lt $subFolderInfo.MyPSNotes.Depth) {
+                    $myPSNotes.Depth = $subFolderInfo.MyPSNotes.Depth
+                }
+                $myPSNotes.Exceptions.AddRange($subFolderInfo.MyPSNotes.Exceptions)
+            }
+    }
+    catch
+    {
+        $myPSNotes.Exceptions.Add($_)
+    }
 
     Add-Member -InputObject $folderInfo -NotePropertyName MyPSNotes -NotePropertyValue $myPSNotes
 
