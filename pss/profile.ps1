@@ -205,6 +205,10 @@ function Get-MyPSFolderInfo
         Size = 0
         Depth = $Depth
         Exceptions = [System.Collections.Generic.List[String]]::new()
+        ProcTime = [PSCustomObject]@{
+            Begin = [System.DateTime]::Now
+            "End" = $null
+        }
     }
 
     try
@@ -239,6 +243,8 @@ function Get-MyPSFolderInfo
     {
         $myPSNotes.Exceptions.Add($_)
     }
+
+    $myPSNotes.ProcTime.End = [System.DateTime]::Now
 
     Add-Member -InputObject $folderInfo -NotePropertyName MyPSNotes -NotePropertyValue $myPSNotes
 
