@@ -282,7 +282,7 @@ function Get-MyPSFileList
         $DepthOffset = $actualDepth
         if ($TsvFormat)
         {
-            Write-Output "FolderPath`tFileName`tFileSize`tPathLength`tDepth(relative)`tDepth(actual)`tGroup1`tGroup2`tGroup3`tBaseName`tExtension`tFileHash`tOutputTime"
+            Write-Output "FolderPath`tFileName`tFileSize`tMdofiedTime`tPathLength`tDepth(relative)`tDepth(actual)`tGroup1`tGroup2`tGroup3`tBaseName`tExtension`tFileHash`tOutputTime"
         }
     }
 
@@ -309,6 +309,7 @@ function Get-MyPSFileList
             }
             else
             {
+                $modifiedTime = $_.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss')
                 $pathLength = $null
                 if ($NeedPathLength)
                 {
@@ -325,7 +326,7 @@ function Get-MyPSFileList
 
                 if ($TsvFormat)
                 {
-                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$pathLength`t$relativeDepth`t$actualDepth`t$group1`t$group2`t$group3`t$($_.BaseName)`t$($_.Extension)`t$fileHash`t$outputTime"
+                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$modifiedTime`t$pathLength`t$relativeDepth`t$actualDepth`t$group1`t$group2`t$group3`t$($_.BaseName)`t$($_.Extension)`t$fileHash`t$outputTime"
                 }
                 else
                 {
@@ -333,6 +334,7 @@ function Get-MyPSFileList
                         FolderPath          = $_.DirectoryName
                         FileName            = $_.Name
                         FileSize            = $_.Length
+                        ModifiedTime        = $modifiedTime
                         PathLength          = $pathLength
                         'Depth(relative)'   = $relativeDepth
                         'Depth(actual)'     = $actualDepth
