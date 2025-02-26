@@ -282,7 +282,7 @@ function Get-MyPSFileList
         $DepthOffset = $actualDepth
         if ($TsvFormat)
         {
-            Write-Output "FolderPath`tFileName`tFileSize`tDepth(relative)`tDepth(actual)`tPathLength`tFileHash"
+            Write-Output "FolderPath`tFileName`tFileSize`tDepth(relative)`tDepth(actual)`tPathLength`tFileHash`tOutputTime"
         }
     }
 
@@ -315,10 +315,11 @@ function Get-MyPSFileList
                     $fileHash = ($_ | Get-FileHash -Algorithm SHA1)
                     $fileHash = "$($fileHash.Algorithm):$($fileHash.Hash.ToLower())"
                 }
+                $outputTime = [System.DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss')
 
                 if ($TsvFormat)
                 {
-                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$relativeDepth`t$actualDepth`t$pathLength`t$fileHash"
+                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$relativeDepth`t$actualDepth`t$pathLength`t$fileHash`t$outputTime"
                 }
                 else
                 {
@@ -330,6 +331,7 @@ function Get-MyPSFileList
                         'Depth(actual)'     = $actualDepth
                         PathLength          = $pathLength
                         FileHash            = $fileHash
+                        OutputTime          = $outputTime
                     }
                 }
             }
