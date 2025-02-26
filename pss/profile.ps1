@@ -261,6 +261,8 @@ function Get-MyPSFileList
         [switch]
         $NeedPathLength,
         [switch]
+        $NeedHash,
+        [switch]
         $TsvFormat
     )
 
@@ -276,6 +278,7 @@ function Get-MyPSFileList
                 $paramSet = @{
                     FolderPath      = $_.FullName
                     NeedPathLength  = $NeedPathLength
+                    NeedHash        = $NeedHash
                     TsvFormat       = $TsvFormat
                 }
                 Get-MyPSFileList @paramSet
@@ -288,10 +291,16 @@ function Get-MyPSFileList
                     $sjisEncoding = [System.Text.Encoding]::GetEncoding('shift_jis')
                     $pathLength = $sjisEncoding.GetByteCount($_.FullName)
                 }
+                $fileHash = $null
+                if ($NeedHash)
+                {
+                    $fileHash = ($_ | Get-FileHash -Algorithm SHA1)
+                    $fileHash = "$($fileHash.Algorithm):$($fileHash.Hash.ToLower())"
+                }
 
                 if ($TsvFormat)
                 {
-                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$pathLength"
+                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$pathLength`t$fileHash"
                 }
                 else
                 {
@@ -300,6 +309,7 @@ function Get-MyPSFileList
                         FileName    = $_.Name
                         FileSize    = $_.Length
                         PathLength  = $pathLength
+                        FileHash    = $fileHash
                     }
                 }
             }
