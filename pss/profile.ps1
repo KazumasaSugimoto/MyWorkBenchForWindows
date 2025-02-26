@@ -257,7 +257,9 @@ function Get-MyPSFileList
     (
         [Parameter(Position=0)]
         [String]
-        $FolderPath
+        $FolderPath,
+        [switch]
+        $TsvFormat
     )
 
     $folderInfo = Get-Item -LiteralPath $FolderPath -Force
@@ -269,14 +271,25 @@ function Get-MyPSFileList
         ForEach-Object {
             if ($_.Attributes -band [System.IO.FileAttributes]::Directory)
             {
-                Get-MyPSFileList -FolderPath $_.FullName
+                $paramSet = @{
+                    FolderPath  = $_.FullName
+                    TsvFormat   = $TsvFormat
+                }
+                Get-MyPSFileList @paramSet
             }
             else
             {
-                [PSCustomObject]@{
-                    FolderPath  = $_.DirectoryName
-                    FileName    = $_.Name
-                    FileSize    = $_.Length
+                if ($TsvFormat)
+                {
+                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)"
+                }
+                else
+                {
+                    [PSCustomObject]@{
+                        FolderPath  = $_.DirectoryName
+                        FileName    = $_.Name
+                        FileSize    = $_.Length
+                    }
                 }
             }
         }
