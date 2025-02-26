@@ -274,7 +274,7 @@ function Get-MyPSFileList
     if (-not ($folderInfo.Attributes -band [System.IO.FileAttributes]::Directory)) { return }
 
     $folderPathNodes = $folderInfo.FullName -split '\\'
-    $actualDepth = $folderPathNodes.Length
+    $actualDepth = $folderPathNodes.Length - 1
     if ($folderPathNodes[-1] -eq '') { $actualDepth-- }
 
     if ($DepthOffset -lt 0)
@@ -282,11 +282,17 @@ function Get-MyPSFileList
         $DepthOffset = $actualDepth
         if ($TsvFormat)
         {
-            Write-Output "FolderPath`tFileName`tFileSize`tDepth(relative)`tDepth(actual)`tPathLength`tFileHash`tOutputTime"
+            Write-Output "FolderPath`tFileName`tFileSize`tDepth(relative)`tDepth(actual)`tGroup1`tGroup2`tGroup3`tPathLength`tFileHash`tOutputTime"
         }
     }
 
     $relativeDepth = $actualDepth - $DepthOffset
+    $relativePathNodes = $folderPathNodes[$DepthOffset..$actualDepth]
+    $relativePathNodes[0] = '.'
+
+    $group1 = $relativePathNodes[0..1] -join '\'
+    $group2 = $relativePathNodes[0..2] -join '\'
+    $group3 = $relativePathNodes[0..3] -join '\'
 
     Get-ChildItem -LiteralPath $FolderPath -Force |
         ForEach-Object {
@@ -319,7 +325,7 @@ function Get-MyPSFileList
 
                 if ($TsvFormat)
                 {
-                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$relativeDepth`t$actualDepth`t$pathLength`t$fileHash`t$outputTime"
+                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$relativeDepth`t$actualDepth`t$group1`t$group2`t$Group3`t$pathLength`t$fileHash`t$outputTime"
                 }
                 else
                 {
@@ -329,6 +335,9 @@ function Get-MyPSFileList
                         FileSize            = $_.Length
                         'Depth(relative)'   = $relativeDepth
                         'Depth(actual)'     = $actualDepth
+                        Group1              = $group1
+                        Group2              = $group2
+                        Group3              = $group3
                         PathLength          = $pathLength
                         FileHash            = $fileHash
                         OutputTime          = $outputTime
