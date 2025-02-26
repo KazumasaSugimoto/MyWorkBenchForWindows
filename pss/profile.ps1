@@ -196,7 +196,7 @@ function Get-MyPSFolderInfo
         $Depth = 0
     )
 
-    $folderInfo = Get-Item -Path $FolderPath -Force
+    $folderInfo = Get-Item -LiteralPath $FolderPath -Force
 
     $myPSNotes = [PSCustomObject]@{
         RawPath = $FolderPath
@@ -249,6 +249,37 @@ function Get-MyPSFolderInfo
     Add-Member -InputObject $folderInfo -NotePropertyName MyPSNotes -NotePropertyValue $myPSNotes
 
     return $folderInfo
+}
+
+function Get-MyPSFileList
+{
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $FolderPath
+    )
+
+    $folderInfo = Get-Item -LiteralPath $FolderPath -Force
+
+    if ($folderInfo.Attributes -band [System.IO.FileAttributes]::ReparsePoint) { return }
+    if (-not ($folderInfo.Attributes -band [System.IO.FileAttributes]::Directory)) { return }
+
+    Get-ChildItem -LiteralPath $FolderPath -Force |
+        ForEach-Object {
+            if ($_.Attributes -band [System.IO.FileAttributes]::Directory)
+            {
+                Get-MyPSFileList -FolderPath $_.FullName
+            }
+            else
+            {
+                [PSCustomObject]@{
+                    FolderPath  = $_.DirectoryName
+                    FileName    = $_.Name
+                    FileSize    = $_.Length
+                }
+            }
+        }
 }
 
 function Get-MyPSFileInfo
