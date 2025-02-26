@@ -282,7 +282,7 @@ function Get-MyPSFileList
         $DepthOffset = $actualDepth
         if ($TsvFormat)
         {
-            Write-Output "FolderPath`tFileName`tFileSize`tPathLength`tDepth(relative)`tDepth(actual)`tGroup1`tGroup2`tGroup3`tFileHash`tOutputTime"
+            Write-Output "FolderPath`tFileName`tFileSize`tPathLength`tDepth(relative)`tDepth(actual)`tGroup1`tGroup2`tGroup3`tBaseName`tExtension`tFileHash`tOutputTime"
         }
     }
 
@@ -325,7 +325,7 @@ function Get-MyPSFileList
 
                 if ($TsvFormat)
                 {
-                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$pathLength`t$relativeDepth`t$actualDepth`t$group1`t$group2`t$group3`t$fileHash`t$outputTime"
+                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$pathLength`t$relativeDepth`t$actualDepth`t$group1`t$group2`t$group3`t$($_.BaseName)`t$($_.Extension)`t$fileHash`t$outputTime"
                 }
                 else
                 {
@@ -339,6 +339,8 @@ function Get-MyPSFileList
                         Group1              = $group1
                         Group2              = $group2
                         Group3              = $group3
+                        BaseName            = $_.BaseName
+                        Extension           = $_.Extension
                         FileHash            = $fileHash
                         OutputTime          = $outputTime
                     }
