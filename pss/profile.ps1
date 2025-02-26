@@ -258,6 +258,8 @@ function Get-MyPSFileList
         [Parameter(Position=0)]
         [String]
         $FolderPath,
+        [int]
+        $DepthOffset = -1,
         [switch]
         $NeedPathLength,
         [switch]
@@ -271,12 +273,28 @@ function Get-MyPSFileList
     if ($folderInfo.Attributes -band [System.IO.FileAttributes]::ReparsePoint) { return }
     if (-not ($folderInfo.Attributes -band [System.IO.FileAttributes]::Directory)) { return }
 
+    $folderPathNodes = $folderInfo.FullName -split '\\'
+    $actualDepth = $folderPathNodes.Length
+    if ($folderPathNodes[-1] -eq '') { $actualDepth-- }
+
+    if ($DepthOffset -lt 0)
+    {
+        $DepthOffset = $actualDepth
+        if ($TsvFormat)
+        {
+            Write-Output "FolderPath`tFileName`tFileSize`tDepth(relative)`tDepth(actual)`tPathLength`tFileHash"
+        }
+    }
+
+    $relativeDepth = $actualDepth - $DepthOffset
+
     Get-ChildItem -LiteralPath $FolderPath -Force |
         ForEach-Object {
             if ($_.Attributes -band [System.IO.FileAttributes]::Directory)
             {
                 $paramSet = @{
                     FolderPath      = $_.FullName
+                    DepthOffset     = $DepthOffset
                     NeedPathLength  = $NeedPathLength
                     NeedHash        = $NeedHash
                     TsvFormat       = $TsvFormat
@@ -300,16 +318,18 @@ function Get-MyPSFileList
 
                 if ($TsvFormat)
                 {
-                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$pathLength`t$fileHash"
+                    Write-Output "$($_.DirectoryName)`t$($_.Name)`t$($_.Length)`t$relativeDepth`t$actualDepth`t$pathLength`t$fileHash"
                 }
                 else
                 {
                     [PSCustomObject]@{
-                        FolderPath  = $_.DirectoryName
-                        FileName    = $_.Name
-                        FileSize    = $_.Length
-                        PathLength  = $pathLength
-                        FileHash    = $fileHash
+                        FolderPath          = $_.DirectoryName
+                        FileName            = $_.Name
+                        FileSize            = $_.Length
+                        'Depth(relative)'   = $relativeDepth
+                        'Depth(actual)'     = $actualDepth
+                        PathLength          = $pathLength
+                        FileHash            = $fileHash
                     }
                 }
             }
