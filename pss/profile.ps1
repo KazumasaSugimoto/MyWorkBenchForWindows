@@ -294,6 +294,11 @@ function Get-MyPSFileList
                 'Group3'
                 'BaseName'
                 'Extension'
+                'IsReadOnly'
+                'IsHidden'
+                'IsTemporary'
+                'IsSystemFile'
+                'IsReparsePoint'
                 'FileHash'
                 'OutputTime'
             )
@@ -328,6 +333,12 @@ function Get-MyPSFileList
                 $modifiedTime = $_.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss')
                 $pathLengthBySjisBytes = $sjisEncoding.GetByteCount($_.FullName)
 
+                $isReadOnly     = ($_.Attributes -band [System.IO.FileAttributes]::ReadOnly)
+                $isHidden       = ($_.Attributes -band [System.IO.FileAttributes]::Hidden)
+                $isTemporary    = ($_.Attributes -band [System.IO.FileAttributes]::Temporary)
+                $isSystemFile   = ($_.Attributes -band [System.IO.FileAttributes]::System)
+                $isReparsePoint = ($_.Attributes -band [System.IO.FileAttributes]::ReparsePoint)
+
                 $fileHash = $null
                 if ($NeedHash)
                 {
@@ -352,6 +363,11 @@ function Get-MyPSFileList
                         $group3
                         $_.BaseName
                         $_.Extension
+                        $isReadOnly
+                        $isHidden
+                        $isTemporary
+                        $isSystemFile
+                        $isReparsePoint
                         $fileHash
                         $outputTime
                     )
@@ -373,6 +389,11 @@ function Get-MyPSFileList
                         Group3                  = $group3
                         BaseName                = $_.BaseName
                         Extension               = $_.Extension
+                        'IsReadOnly'            = $isReadOnly
+                        'IsHidden'              = $isHidden
+                        'IsTemporary'           = $isTemporary
+                        'IsSystemFile'          = $isSystemFile
+                        'IsReparsePoint'        = $isReparsePoint
                         FileHash                = $fileHash
                         OutputTime              = $outputTime
                     }
