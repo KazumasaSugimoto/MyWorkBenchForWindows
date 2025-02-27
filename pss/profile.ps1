@@ -261,8 +261,6 @@ function Get-MyPSFileList
         [int]
         $DepthOffset = -1,
         [switch]
-        $NeedPathLength,
-        [switch]
         $NeedHash,
         [switch]
         $TsvFormat
@@ -287,7 +285,8 @@ function Get-MyPSFileList
                 'FileName'
                 'FileSize'
                 'MdofiedTime'
-                'PathLength'
+                'PathLength(char)'
+                'PathLength(sjisBytes)'
                 'Depth(relative)'
                 'Depth(actual)'
                 'Group1'
@@ -317,7 +316,6 @@ function Get-MyPSFileList
                 $paramSet = @{
                     FolderPath      = $_.FullName
                     DepthOffset     = $DepthOffset
-                    NeedPathLength  = $NeedPathLength
                     NeedHash        = $NeedHash
                     TsvFormat       = $TsvFormat
                 }
@@ -326,12 +324,10 @@ function Get-MyPSFileList
             else
             {
                 $modifiedTime = $_.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss')
-                $pathLength = $null
-                if ($NeedPathLength)
-                {
-                    $sjisEncoding = [System.Text.Encoding]::GetEncoding('shift_jis')
-                    $pathLength = $sjisEncoding.GetByteCount($_.FullName)
-                }
+
+                $sjisEncoding = [System.Text.Encoding]::GetEncoding('shift_jis')
+                $pathLengthBySjisBytes = $sjisEncoding.GetByteCount($_.FullName)
+
                 $fileHash = $null
                 if ($NeedHash)
                 {
@@ -347,7 +343,8 @@ function Get-MyPSFileList
                         $_.Name
                         $_.Length
                         $modifiedTime
-                        $pathLength
+                        $_.FullName.Length
+                        $pathLengthBySjisBytes
                         $relativeDepth
                         $actualDepth
                         $group1
@@ -363,20 +360,21 @@ function Get-MyPSFileList
                 else
                 {
                     [PSCustomObject]@{
-                        FolderPath          = $_.DirectoryName
-                        FileName            = $_.Name
-                        FileSize            = $_.Length
-                        ModifiedTime        = $modifiedTime
-                        PathLength          = $pathLength
-                        'Depth(relative)'   = $relativeDepth
-                        'Depth(actual)'     = $actualDepth
-                        Group1              = $group1
-                        Group2              = $group2
-                        Group3              = $group3
-                        BaseName            = $_.BaseName
-                        Extension           = $_.Extension
-                        FileHash            = $fileHash
-                        OutputTime          = $outputTime
+                        FolderPath              = $_.DirectoryName
+                        FileName                = $_.Name
+                        FileSize                = $_.Length
+                        ModifiedTime            = $modifiedTime
+                        'PathLength(char)'      = $_.FullName.Length
+                        'PathLength(sjisBytes)' = $pathLengthBySjisBytes
+                        'Depth(relative)'       = $relativeDepth
+                        'Depth(actual)'         = $actualDepth
+                        Group1                  = $group1
+                        Group2                  = $group2
+                        Group3                  = $group3
+                        BaseName                = $_.BaseName
+                        Extension               = $_.Extension
+                        FileHash                = $fileHash
+                        OutputTime              = $outputTime
                     }
                 }
             }
