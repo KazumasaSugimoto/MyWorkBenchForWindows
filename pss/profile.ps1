@@ -309,6 +309,8 @@ function Get-MyPSFileList
     $group2 = $relativePathNodes[0..2] -join '\'
     $group3 = $relativePathNodes[0..3] -join '\'
 
+    $sjisEncoding = [System.Text.Encoding]::GetEncoding('shift_jis')
+
     Get-ChildItem -LiteralPath $FolderPath -Force |
         ForEach-Object {
             if ($_.Attributes -band [System.IO.FileAttributes]::Directory)
@@ -324,8 +326,6 @@ function Get-MyPSFileList
             else
             {
                 $modifiedTime = $_.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss')
-
-                $sjisEncoding = [System.Text.Encoding]::GetEncoding('shift_jis')
                 $pathLengthBySjisBytes = $sjisEncoding.GetByteCount($_.FullName)
 
                 $fileHash = $null
