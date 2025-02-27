@@ -272,7 +272,7 @@ function Get-MyPSFileList
     if (-not ($folderInfo.Attributes -band [System.IO.FileAttributes]::Directory)) { return }
 
     $folderPathNodes = $folderInfo.FullName -split '\\'
-    $actualDepth = $folderPathNodes.Length - 1
+    $actualDepth = $folderPathNodes.Count - 1
     if ($folderPathNodes[-1] -eq '') { $actualDepth-- }
 
     if ($DepthOffset -lt 0)
@@ -284,7 +284,7 @@ function Get-MyPSFileList
                 'FolderPath'
                 'FileName'
                 'FileSize'
-                'MdofiedTime'
+                'ModifiedTime'
                 'PathLength(char)'
                 'PathLength(sjisBytes)'
                 'Depth(relative)'
