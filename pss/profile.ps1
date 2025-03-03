@@ -268,8 +268,8 @@ function Get-MyPSFileList
 
     $folderInfo = Get-Item -LiteralPath $FolderPath -Force
 
-    if ($folderInfo.Attributes -band [System.IO.FileAttributes]::ReparsePoint) { return }
-    if (-not ($folderInfo.Attributes -band [System.IO.FileAttributes]::Directory)) { return }
+    if ($folderInfo.Attributes.IsReparsePoint) { return }
+    if ($folderInfo.Attributes.IsNotDirectory) { return }
 
     $folderPathNodes = $folderInfo.FullName -split '\\'
     $actualDepth = $folderPathNodes.Count - 1
@@ -318,7 +318,7 @@ function Get-MyPSFileList
 
     Get-ChildItem -LiteralPath $FolderPath -Force |
         ForEach-Object {
-            if ($_.Attributes -band [System.IO.FileAttributes]::Directory)
+            if ($_.Attributes.IsDirectory)
             {
                 $paramSet = @{
                     FolderPath      = $_.FullName
@@ -333,11 +333,11 @@ function Get-MyPSFileList
                 $modifiedTime = $_.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss')
                 $pathLengthBySjisBytes = $sjisEncoding.GetByteCount($_.FullName)
 
-                $isReadOnly     = ($_.Attributes -band [System.IO.FileAttributes]::ReadOnly)
-                $isHidden       = ($_.Attributes -band [System.IO.FileAttributes]::Hidden)
-                $isTemporary    = ($_.Attributes -band [System.IO.FileAttributes]::Temporary)
-                $isSystemFile   = ($_.Attributes -band [System.IO.FileAttributes]::System)
-                $isReparsePoint = ($_.Attributes -band [System.IO.FileAttributes]::ReparsePoint)
+                $isReadOnly     = $_.Attributes.IsReadOnly
+                $isHidden       = $_.Attributes.IsHidden
+                $isTemporary    = $_.Attributes.IsTemporary
+                $isSystemFile   = $_.Attributes.IsSystem
+                $isReparsePoint = $_.Attributes.IsReparsePoint
 
                 $fileHash = $null
                 if ($NeedHash)
@@ -551,4 +551,32 @@ Set-Alias -Name tt      -Value Set-MyPSWindowTitle
 
 Update-TypeData -TypeName System.Management.Automation.ExternalScriptInfo -MemberType ScriptProperty -MemberName DirectoryName -Value {
     return $this.Path.Substring(0, $this.Path.Length - $this.Name.Length - 1)
+}
+
+Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsDirectory -Value {
+    return ($this -band [System.IO.FileAttributes]::Directory) -ne 0
+}
+
+Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsNotDirectory -Value {
+    return ($this -band [System.IO.FileAttributes]::Directory) -eq 0
+}
+
+Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsReadOnly -Value {
+    return ($this -band [System.IO.FileAttributes]::ReadOnly) -ne 0
+}
+
+Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsHidden -Value {
+    return ($this -band [System.IO.FileAttributes]::Hidden) -ne 0
+}
+
+Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsTemporary -Value {
+    return ($this -band [System.IO.FileAttributes]::Temporary) -ne 0
+}
+
+Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsSystem -Value {
+    return ($this -band [System.IO.FileAttributes]::System) -ne 0
+}
+
+Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsReparsePoint -Value {
+    return ($this -band [System.IO.FileAttributes]::ReparsePoint) -ne 0
 }
