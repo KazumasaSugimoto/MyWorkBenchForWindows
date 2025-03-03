@@ -580,3 +580,77 @@ Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -M
 Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsReparsePoint -Value {
     return ($this -band [System.IO.FileAttributes]::ReparsePoint) -ne 0
 }
+
+Update-TypeData -TypeName System.IO.FileInfo -MemberType ScriptMethod -MemberName GetHeadBytes -Value {
+    param
+    (
+        [Parameter(Position=0)]
+        [int]
+        $BytesCount = 1
+    )
+    $byteOption = Get-MyPSByteOption
+    $this | Get-Content @byteOption -Head $BytesCount
+}
+
+Update-TypeData -TypeName System.IO.FileInfo -MemberType ScriptMethod -MemberName GetTailBytes -Value {
+    param
+    (
+        [Parameter(Position=0)]
+        [int]
+        $BytesCount = 1
+    )
+    $byteOption = Get-MyPSByteOption
+    $this | Get-Content @byteOption -Tail $BytesCount
+}
+
+Update-TypeData -TypeName System.IO.FileInfo -MemberType ScriptMethod -MemberName GetFileHash -Value {
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $Algorithm = ''
+    )
+
+    if ($Algorithm -ne '')
+    {
+        return ($this | Get-FileHash -Algorithm $Algorithm).Hash
+    }
+
+    [System.IO.MemoryStream]$memoryStream = $null
+    [System.IO.FileStream]$fileStream = $null
+
+    try
+    {
+        $gitBlobHeaderBytes = [System.Text.Encoding]::ASCII.GetBytes("blob $($this.Length)`0")
+
+        $memoryStream = [System.IO.MemoryStream]::new()
+        $memoryStream.Write($gitBlobHeaderBytes, 0, $gitBlobHeaderBytes.Length)
+
+        $fileStream = $this.OpenRead()
+        $fileStream.CopyTo($memoryStream)
+
+        [void]$memoryStream.Seek(0, [System.IO.SeekOrigin]::Begin)
+
+        $hashProvider = [System.Security.Cryptography.SHA1CryptoServiceProvider]::new()
+        $gitBlobHash = $hashProvider.ComputeHash($memoryStream)
+
+        return $gitBlobHash
+    }
+    catch
+    {
+        throw
+    }
+    finally
+    {
+        if ($null -ne $fileStream)
+        {
+            $fileStream.Dispose()
+            $fileStream = $null
+        }
+        if ($null -ne $memoryStream)
+        {
+            $memoryStream.Dispose()
+            $memoryStream = $null
+        }
+    }
+}
