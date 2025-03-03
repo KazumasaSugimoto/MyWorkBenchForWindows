@@ -548,3 +548,7 @@ Set-Alias -Name syntax  -Value Get-MyPSCommandSyntax
 Set-Alias -Name src     -Value Get-MyPSScriptBlock
 Set-Alias -Name source  -Value Get-MyPSScriptBlock
 Set-Alias -Name tt      -Value Set-MyPSWindowTitle
+
+Update-TypeData -TypeName System.Management.Automation.ExternalScriptInfo -MemberType ScriptProperty -MemberName DirectoryName -Value {
+    return $this.Path.Substring(0, $this.Path.Length - $this.Name.Length - 1)
+}
