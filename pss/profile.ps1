@@ -13,6 +13,11 @@ function Get-MyPSVersionString
     Write-Output $PSVersionTable.PSVersion.ToString()
 }
 
+function Get-MyPSVersionIndex
+{
+    if ($PSVersionTable.PSVersion.Major -le 5) { return 0 } else { return 1 }
+}
+
 function Move-MyPSCurrentDirectory
 {
 <#
@@ -668,6 +673,18 @@ Update-TypeData @paramSet -MemberName GetFileHash -Value {
             $memoryStream = $null
         }
     }
+}
+
+$paramSet = @{
+    TypeName    = @(
+                    'Microsoft.Powershell.Utility.FileHash'         # v5
+                    'Microsoft.PowerShell.Commands.FileHashInfo'    # v7
+                )[(Get-MyPSVersionIndex)]
+    MemberType  = 'ScriptProperty'
+    MemberName  = 'Description'
+}
+Update-TypeData @paramSet -Value {
+    return $this.Algorithm + ': ' + $this.Hash.ToLower()
 }
 
 Remove-Variable -Name paramSet
