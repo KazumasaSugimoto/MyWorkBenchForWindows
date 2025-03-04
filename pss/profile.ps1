@@ -626,7 +626,7 @@ Update-TypeData @paramSet -MemberName GetFileHash -Value {
 
     if ($Algorithm -ne '')
     {
-        return ($this | Get-FileHash -Algorithm $Algorithm).Hash
+        return ($this | Get-FileHash -Algorithm $Algorithm)
     }
 
     [System.IO.MemoryStream]$memoryStream = $null
@@ -644,8 +644,10 @@ Update-TypeData @paramSet -MemberName GetFileHash -Value {
 
         [void]$memoryStream.Seek(0, [System.IO.SeekOrigin]::Begin)
 
-        $hashProvider = [System.Security.Cryptography.SHA1CryptoServiceProvider]::new()
-        $gitBlobHash = $hashProvider.ComputeHash($memoryStream)
+        $gitBlobHash = Get-FileHash -InputStream $memoryStream -Algorithm SHA1
+
+        $gitBlobHash.Algorithm = 'SHA1(GitBlob)'
+        $gitBlobHash.Path = $this.FullName
 
         return $gitBlobHash
     }
