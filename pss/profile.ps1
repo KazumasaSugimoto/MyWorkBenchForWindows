@@ -669,3 +669,5 @@ Update-TypeData @paramSet -MemberName GetFileHash -Value {
         }
     }
 }
+
+Remove-Variable -Name paramSet
