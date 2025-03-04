@@ -604,10 +604,10 @@ Update-TypeData @paramSet -MemberName GetHeadBytes -Value {
     (
         [Parameter(Position=0)]
         [int]
-        $BytesCount = 1
+        $Length = 1
     )
     $byteOption = Get-MyPSByteOption
-    $this | Get-Content @byteOption -Head $BytesCount
+    $this | Get-Content @byteOption -Head $Length
 }
 
 Update-TypeData @paramSet -MemberName GetTailBytes -Value {
@@ -615,10 +615,10 @@ Update-TypeData @paramSet -MemberName GetTailBytes -Value {
     (
         [Parameter(Position=0)]
         [int]
-        $BytesCount = 1
+        $Length = 1
     )
     $byteOption = Get-MyPSByteOption
-    $this | Get-Content @byteOption -Tail $BytesCount
+    $this | Get-Content @byteOption -Tail $Length
 }
 
 Update-TypeData @paramSet -MemberName GetFileHash -Value {
