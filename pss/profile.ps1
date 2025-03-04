@@ -549,39 +549,52 @@ Set-Alias -Name src     -Value Get-MyPSScriptBlock
 Set-Alias -Name source  -Value Get-MyPSScriptBlock
 Set-Alias -Name tt      -Value Set-MyPSWindowTitle
 
-Update-TypeData -TypeName System.Management.Automation.ExternalScriptInfo -MemberType ScriptProperty -MemberName DirectoryName -Value {
+$paramSet = @{
+    TypeName    = 'System.Management.Automation.ExternalScriptInfo'
+    MemberType  = 'ScriptProperty'
+    MemberName  = 'DirectoryName'
+}
+Update-TypeData @paramSet -Value {
     return $this.Path.Substring(0, $this.Path.Length - $this.Name.Length - 1)
 }
 
-Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsDirectory -Value {
+$paramSet = @{
+    TypeName    = 'System.IO.FileAttributes'
+    MemberType  = 'ScriptProperty'
+}
+Update-TypeData @paramSet -MemberName IsDirectory -Value {
     return ($this -band [System.IO.FileAttributes]::Directory) -ne 0
 }
 
-Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsNotDirectory -Value {
+Update-TypeData @paramSet -MemberName IsNotDirectory -Value {
     return ($this -band [System.IO.FileAttributes]::Directory) -eq 0
 }
 
-Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsReadOnly -Value {
+Update-TypeData @paramSet -MemberName IsReadOnly -Value {
     return ($this -band [System.IO.FileAttributes]::ReadOnly) -ne 0
 }
 
-Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsHidden -Value {
+Update-TypeData @paramSet -MemberName IsHidden -Value {
     return ($this -band [System.IO.FileAttributes]::Hidden) -ne 0
 }
 
-Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsTemporary -Value {
+Update-TypeData @paramSet -MemberName IsTemporary -Value {
     return ($this -band [System.IO.FileAttributes]::Temporary) -ne 0
 }
 
-Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsSystem -Value {
+Update-TypeData @paramSet -MemberName IsSystem -Value {
     return ($this -band [System.IO.FileAttributes]::System) -ne 0
 }
 
-Update-TypeData -TypeName System.IO.FileAttributes -MemberType ScriptProperty -MemberName IsReparsePoint -Value {
+Update-TypeData @paramSet -MemberName IsReparsePoint -Value {
     return ($this -band [System.IO.FileAttributes]::ReparsePoint) -ne 0
 }
 
-Update-TypeData -TypeName System.IO.FileInfo -MemberType ScriptMethod -MemberName GetHeadBytes -Value {
+$paramSet = @{
+    TypeName    = 'System.IO.FileInfo'
+    MemberType  = 'ScriptMethod'
+}
+Update-TypeData @paramSet -MemberName GetHeadBytes -Value {
     param
     (
         [Parameter(Position=0)]
@@ -592,7 +605,7 @@ Update-TypeData -TypeName System.IO.FileInfo -MemberType ScriptMethod -MemberNam
     $this | Get-Content @byteOption -Head $BytesCount
 }
 
-Update-TypeData -TypeName System.IO.FileInfo -MemberType ScriptMethod -MemberName GetTailBytes -Value {
+Update-TypeData @paramSet -MemberName GetTailBytes -Value {
     param
     (
         [Parameter(Position=0)]
@@ -603,7 +616,7 @@ Update-TypeData -TypeName System.IO.FileInfo -MemberType ScriptMethod -MemberNam
     $this | Get-Content @byteOption -Tail $BytesCount
 }
 
-Update-TypeData -TypeName System.IO.FileInfo -MemberType ScriptMethod -MemberName GetFileHash -Value {
+Update-TypeData @paramSet -MemberName GetFileHash -Value {
     param
     (
         [Parameter(Position=0)]
