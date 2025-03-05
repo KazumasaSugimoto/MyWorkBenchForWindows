@@ -555,6 +555,30 @@ Set-Alias -Name source  -Value Get-MyPSScriptBlock
 Set-Alias -Name tt      -Value Set-MyPSWindowTitle
 
 $paramSet = @{
+    TypeName    = 'System.String'
+    MemberType  = 'ScriptMethod'
+}
+Update-TypeData @paramSet -MemberName SplitByLength -Value {
+    param (
+        [Parameter(Position=0)]
+        [int]
+        $Length
+    )
+
+    for ($i = 0; $i -lt $this.Length; $i += $Length)
+    {
+        try
+        {
+            $this.Substring($i, $Length)
+        }
+        catch
+        {
+            $this.Substring($i)
+        }
+    }
+}
+
+$paramSet = @{
     TypeName    = 'System.Management.Automation.ExternalScriptInfo'
     MemberType  = 'ScriptProperty'
     MemberName  = 'DirectoryName'
