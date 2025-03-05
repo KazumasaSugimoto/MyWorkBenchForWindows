@@ -578,6 +578,17 @@ Update-TypeData @paramSet -MemberName SplitByLength -Value {
     }
 }
 
+Update-TypeData @paramSet -MemberName HexStringToBytes -Value {
+    $this.SplitByLength(2) |
+        ForEach-Object {
+            [System.Convert]::ToByte($_, 16)
+        }
+}
+
+Update-TypeData @paramSet -MemberName HexStringToBase64 -Value {
+    [System.Convert]::ToBase64String($this.HexStringToBytes())
+}
+
 $paramSet = @{
     TypeName    = 'System.Management.Automation.ExternalScriptInfo'
     MemberType  = 'ScriptProperty'
