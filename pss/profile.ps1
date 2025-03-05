@@ -589,6 +589,28 @@ Update-TypeData @paramSet -MemberName HexStringToBase64 -Value {
     [System.Convert]::ToBase64String($this.HexStringToBytes())
 }
 
+Update-TypeData @paramSet -MemberName OctStringToBytes -Value {
+    $this.SplitByLength(3) |
+        ForEach-Object {
+            [System.Convert]::ToByte($_, 8)
+        }
+}
+
+Update-TypeData @paramSet -MemberName OctStringToBase64 -Value {
+    [System.Convert]::ToBase64String($this.OctStringToBytes())
+}
+
+Update-TypeData @paramSet -MemberName BinStringToBytes -Value {
+    $this.SplitByLength(8) |
+        ForEach-Object {
+            [System.Convert]::ToByte($_, 2)
+        }
+}
+
+Update-TypeData @paramSet -MemberName BinStringToBase64 -Value {
+    [System.Convert]::ToBase64String($this.BinStringToBytes())
+}
+
 $paramSet = @{
     TypeName    = 'System.Management.Automation.ExternalScriptInfo'
     MemberType  = 'ScriptProperty'
