@@ -737,11 +737,15 @@ $paramSet = @{
                     'Microsoft.Powershell.Utility.FileHash'         # v5
                     'Microsoft.PowerShell.Commands.FileHashInfo'    # v7
                 )[(Get-MyPSVersionIndex)]
-    MemberType  = 'ScriptProperty'
-    MemberName  = 'Description'
 }
-Update-TypeData @paramSet -Value {
+Update-TypeData @paramSet -MemberType ScriptProperty -MemberName Base64 -Value {
+    return $this.Hash.HexStringToBase64()
+}
+Update-TypeData @paramSet -MemberType ScriptMethod -MemberName GetCaption -Value {
     return $this.Algorithm + ': ' + $this.Hash.ToLower()
+}
+Update-TypeData @paramSet -MemberType ScriptMethod -MemberName GetCaptionByBase64 -Value {
+    return $this.Algorithm + ': ' + $this.Base64
 }
 
 Remove-Variable -Name paramSet
