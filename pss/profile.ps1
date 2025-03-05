@@ -683,10 +683,10 @@ Update-TypeData @paramSet -MemberName GetFileHash -Value {
     (
         [Parameter(Position=0)]
         [String]
-        $Algorithm = ''
+        $Algorithm = 'Git'
     )
 
-    if ($Algorithm -ne '')
+    if ($Algorithm -ne 'Git')
     {
         return ($this | Get-FileHash -Algorithm $Algorithm)
     }
@@ -708,7 +708,7 @@ Update-TypeData @paramSet -MemberName GetFileHash -Value {
 
         $gitBlobHash = Get-FileHash -InputStream $memoryStream -Algorithm SHA1
 
-        $gitBlobHash.Algorithm = 'SHA1(GitBlob)'
+        $gitBlobHash.Algorithm = 'GitBlob(SHA1)'
         $gitBlobHash.Path = $this.FullName
 
         return $gitBlobHash
