@@ -335,7 +335,7 @@ function Get-MyPSFileList
             }
             else
             {
-                $modifiedTime = $_.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss')
+                $modifiedTime = $_.LastWriteTime.ToISOLike()
                 $pathLengthBySjisBytes = $sjisEncoding.GetByteCount($_.FullName)
 
                 $isReadOnly     = $_.Attributes.IsReadOnly
@@ -350,7 +350,7 @@ function Get-MyPSFileList
                     $fileHash = ($_ | Get-FileHash -Algorithm SHA1)
                     $fileHash = "$($fileHash.Algorithm):$($fileHash.Hash.ToLower())"
                 }
-                $outputTime = [System.DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss')
+                $outputTime = [System.DateTime]::Now.ToISOLike()
 
                 if ($TsvFormat)
                 {
@@ -559,7 +559,8 @@ $paramSet = @{
     MemberType  = 'ScriptMethod'
 }
 Update-TypeData @paramSet -MemberName SplitByLength -Value {
-    param (
+    param
+    (
         [Parameter(Position=0)]
         [int]
         $Length
@@ -609,6 +610,23 @@ Update-TypeData @paramSet -MemberName BinStringToBytes -Value {
 
 Update-TypeData @paramSet -MemberName BinStringToBase64 -Value {
     [System.Convert]::ToBase64String($this.BinStringToBytes())
+}
+
+$paramSet = @{
+    TypeName    = 'System.DateTime'
+    MemberType  = 'ScriptMethod'
+}
+Update-TypeData @paramSet -MemberName ToISO -Value {
+    return $this.ToString('yyyy-MM-ddTHH:mm:sszzz')
+}
+Update-TypeData @paramSet -MemberName ToISOShort -Value {
+    return $this.ToString('yyyyMMddTHHmmsszzz').Replace(':','')
+}
+Update-TypeData @paramSet -MemberName ToISOLike -Value {
+    return $this.ToString('yyyy-MM-dd HH:mm:ss')
+}
+Update-TypeData @paramSet -MemberName ToISOLikeShort -Value {
+    return $this.ToString('yyyyMMdd HHmmss')
 }
 
 $paramSet = @{
@@ -746,6 +764,9 @@ Update-TypeData @paramSet -MemberType ScriptMethod -MemberName GetCaption -Value
 }
 Update-TypeData @paramSet -MemberType ScriptMethod -MemberName GetCaptionByBase64 -Value {
     return $this.Algorithm + ': ' + $this.Base64
+}
+Update-TypeData @paramSet -MemberType ScriptMethod -MemberName GetCaptionWithBase64 -Value {
+    return $this.Algorithm + ': ' + $this.Hash.ToLower() + ' ( ' + $this.Base64 + ' )'
 }
 
 Remove-Variable -Name paramSet
