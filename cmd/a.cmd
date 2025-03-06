@@ -11,7 +11,7 @@ rem     a[.cmd] target [instruction]
 rem target:
 rem     file path.
 rem instruction:
-rem     command line. (default: `dir`)
+rem     command line. (default: show digest information of target)
 rem     target relace holder:
 rem         `???` or ` to `
 rem example:
@@ -31,6 +31,7 @@ if not defined TARGET (
     call bshelp.cmd "%~f0"
     exit /b 1
 )
+set TARGET=%TARGET:/=\%
 set INSTRUCTION=
 
 :JOIN_INSTRUCTION_PART
@@ -44,12 +45,19 @@ goto JOIN_INSTRUCTION_PART
 
 :DETERMINE_INSTRUCTION
 
-if not defined INSTRUCTION set INSTRUCTION= dir ???
-set INSTRUCTION=%INSTRUCTION:~1%
+if defined INSTRUCTION goto GENERATE_COMMAND_LINE
+
+:DEFAULT_INSTRUCTION
+
+dir /a- %TARGET% >nul
+if ERRORLEVEL 1 exit /b 1
+
+call ps.cmd -Command "Get-Item %TARGET% -Force | Select-Object Name, LastWriteTime, Length, Mode | Format-Table -Wrap"
+exit /b 0
 
 :GENERATE_COMMAND_LINE
 
-set TARGET=%TARGET:/=\%
+set INSTRUCTION=%INSTRUCTION:~1%
 
 :: try: replace `???` to target.
 set COMMAND_LINE=!INSTRUCTION:???=%TARGET%!
