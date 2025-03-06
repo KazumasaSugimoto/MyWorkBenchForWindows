@@ -55,6 +55,7 @@ if ERRORLEVEL 1 exit /b 1
 call ps.cmd -Command "Get-Item %TARGET% -Force | Select-Object Name, LastWriteTime, Length, Mode | Format-Table -Wrap"
 call ps.cmd -Command "(Get-Item -LiteralPath %TARGET% -Force).GetFileHash().GetCaptionWithBase64()" 2>nul
 git status --short --branch -- %TARGET% 2>nul
+git log -3 --pretty=format:"%%h %%s %%cr %%ar %%d" -- %TARGET% 2>nul
 exit /b 0
 
 :GENERATE_COMMAND_LINE
