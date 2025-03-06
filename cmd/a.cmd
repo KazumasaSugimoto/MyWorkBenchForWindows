@@ -53,7 +53,7 @@ dir /a- %TARGET% >nul
 if ERRORLEVEL 1 exit /b 1
 
 call ps.cmd -Command "Get-Item %TARGET% -Force | Select-Object Name, LastWriteTime, Length, Mode | Format-Table -Wrap"
-call ps.cmd -Command "(Get-Item %TARGET% -Force).GetFileHash().GetCaptionWithBase64()"
+call ps.cmd -Command "(Get-Item -LiteralPath %TARGET% -Force).GetFileHash().GetCaptionWithBase64()" 2>nul
 exit /b 0
 
 :GENERATE_COMMAND_LINE
