@@ -16,7 +16,7 @@ rem     target relace holder:
 rem         `???` or ` to `
 rem example:
 rem     a foo.txt
-rem         --> dir foo.txt
+rem         --> show digest information (target attributes, etc...)
 rem     a foo.txt type
 rem     a foo.txt type ???
 rem         --> type foo.txt
