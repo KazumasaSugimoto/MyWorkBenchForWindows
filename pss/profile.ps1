@@ -632,10 +632,26 @@ Update-TypeData @paramSet -MemberName ToISOLikeShort -Value {
 $paramSet = @{
     TypeName    = 'System.Management.Automation.ExternalScriptInfo'
     MemberType  = 'ScriptProperty'
-    MemberName  = 'DirectoryName'
 }
-Update-TypeData @paramSet -Value {
+Update-TypeData @paramSet -MemberName DirectoryName -Value {
     return $this.Path.Substring(0, $this.Path.Length - $this.Name.Length - 1)
+}
+Update-TypeData @paramSet -MemberName BaseName -Value {
+    if ($this.Name -match '^(?<BaseName>.+)(?<Extension>\.[^\.]+)') {
+        return $Matches.BaseName
+    } else {
+        return $this.Name
+    }
+}
+Update-TypeData @paramSet -MemberName Extension -Value {
+    if ($this.Name -match '^(?<BaseName>.+)(?<Extension>\.[^\.]+)') {
+        return $Matches.Extension
+    } else {
+        return ''
+    }
+}
+Update-TypeData @paramSet -MemberName ExtensionRemovedPath -Value {
+    return $this.DirectoryName + '\' + $this.BaseName
 }
 
 $paramSet = @{
