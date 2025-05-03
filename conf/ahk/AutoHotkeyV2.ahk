@@ -108,7 +108,7 @@ SetStoreCapsLockMode 0
 
        >^m:: Send "{AppsKey}" ;; TODO
 ;  <^<!<#m:: toggleMode
-   <^<!<#m:: switchOrLaunchApplication("Mailer", "outlook.exe")
+   <^<!<#m:: switchOrLaunchApplication("Mailer", "olk.exe") ;; outlook.exe(old) -> olk.exe(new)
 
 ;-----------------------
 ;   n N
