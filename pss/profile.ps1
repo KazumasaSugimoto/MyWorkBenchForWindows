@@ -517,7 +517,8 @@ function Get-MyPSLeafFolders
     }
 
     $prevFolder = ''
-    Sort-Object -InputObject $subFolders -Descending |
+    $subFolders |
+        Sort-Object -Descending |
         ForEach-Object {
             if ($prevFolder -notlike "$_*")
             {
