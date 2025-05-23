@@ -2,5 +2,6 @@
 
 rem Batch Script Help Part Displayer
 
-call ps.cmd -File "%~dpn0.ps1" %*
+:: don't use `ps.cmd` because response speed is priority.
+powershell -NoProfile -File "%~dpn0.ps1" %*
 exit /b %ERRORLEVEL%
