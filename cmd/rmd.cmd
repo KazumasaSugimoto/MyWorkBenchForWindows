@@ -13,6 +13,7 @@ rem     existing folder path.
 rem options:
 rem     --cleanup  | -c ... remake mode.
 rem     --no-pause | -n ... avoid execution confirmation.
+:: PEND: verbose mode. ( --verbose | - v )
 
 setlocal
 
