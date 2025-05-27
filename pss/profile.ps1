@@ -688,6 +688,43 @@ Update-TypeData @paramSet -MemberName IsReparsePoint -Value {
 }
 
 $paramSet = @{
+    TypeName    = 'System.IO.DirectoryInfo'
+    MemberType  = 'ScriptMethod'
+}
+Update-TypeData @paramSet -MemberName CreateJunction -Value {
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $JunctionPath
+    )
+    # Normally you would do this:
+    #
+    #   New-Item -Path $JunctionPath -ItemType Junction -Value $this.FullName | Out-Null
+    #
+    # However, if `-Value` contains `[` or `]`,
+    # you will get a "can't find path" error message.
+    #
+    # e.g.
+    #   New-Item -Path '[new-folder]' -ItemType Directory
+    #   New-Item -Path 'new-junction' -ItemType Junction -Value '[new-folder]'
+    #   --> New-Item: Cannot find path '[new-folder]' because it does not exist.
+    #
+    # To get around this issue, you need to escape `[` and `]` like this:
+    #
+    #   --- Windows PowerShell ---
+    #   New-Item -Path 'new-junction' -ItemType Junction -Value '`[new-folder`]'
+    #   --- PowerShell ---
+    #   New-Item -Path 'new-junction' -ItemType Junction -Value '``[new-folder``]'
+    #
+    # This is tedious, so I decided to use the command shell's 'mklink' command.
+    $this.Refresh()
+    if (-not $this.Exists) { return $false }
+    cmd /c "mklink /J ""$JunctionPath"" ""$($this.FullName)""" >nul 2>&1
+    return $?
+}
+
+$paramSet = @{
     TypeName    = 'System.IO.FileInfo'
     MemberType  = 'ScriptMethod'
 }
