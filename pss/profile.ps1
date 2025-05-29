@@ -712,10 +712,10 @@ Update-TypeData @paramSet -MemberName CreateJunction -Value {
     #
     # To get around this issue, you need to escape `[` and `]` like this:
     #
-    #   --- Windows PowerShell ---
-    #   New-Item -Path 'new-junction' -ItemType Junction -Value '`[new-folder`]'
-    #   --- PowerShell ---
-    #   New-Item -Path 'new-junction' -ItemType Junction -Value '``[new-folder``]'
+    #   --- Windows PowerShell (powershell.exe) ---
+    #   New-Item -Path 'new-junction' -ItemType Junction -Value '`[new-folder`]'    # [WildcardPattern]::Escape('[new-folder]')
+    #   --- PowerShell (pwsh.exe) ---
+    #   New-Item -Path 'new-junction' -ItemType Junction -Value '``[new-folder``]'  # [WildcardPattern]::Escape([WildcardPattern]::Escape('[new-folder]'))
     #
     # This is tedious, so I decided to use the command shell's 'mklink' command.
     $this.Refresh()
