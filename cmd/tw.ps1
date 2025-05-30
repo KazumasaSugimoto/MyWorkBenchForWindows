@@ -114,3 +114,5 @@ if ($tailByte -ne 0x0A)
         Warning = 'LF(0x0A) is missing before EOF.'
     }
 }
+
+Write-Host ('total {0:N0} lines.' -f $rowNum)
