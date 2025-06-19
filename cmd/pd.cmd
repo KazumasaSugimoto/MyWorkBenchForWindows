@@ -49,12 +49,12 @@ if defined PD_TAGs[%DESTINATION%] (
 
 :DO_PUSHD
 
-endlocal & pushd "%DESTINATION%"
+endlocal & (pushd "%DESTINATION%" && set PD_PREV_DIR=%CD%)
 exit /b %ERRORLEVEL%
 
 :POPD_MODE
 
-popd
+popd && set PD_PREV_DIR=%CD%
 exit /b 0
 
 :TAGGING_MODE
@@ -124,7 +124,7 @@ set DESTINATION=%TEMP%\%YMD:~0,4%\%YMD:~0,6%\%YMD%
 
 mkdir "%DESTINATION%" 2>nul
 
-endlocal & pushd "%DESTINATION%"
+endlocal & (pushd "%DESTINATION%" && set PD_PREV_DIR=%CD%)
 exit /b %ERRORLEVEL%
 
 :EDIT_SELF
