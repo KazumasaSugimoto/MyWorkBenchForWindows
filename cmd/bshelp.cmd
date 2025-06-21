@@ -21,12 +21,20 @@
 
 :NEW_VERSION
 
+@call lluid.cmd LLUID >nul
+@set CONDITIONS=%TEMP%\%~nx0.%LLUID%.tmp
+@type nul>"%CONDITIONS%"
+
+@echo.^^ *%PREAMBLE%$>>"%CONDITIONS%"
+@echo.^^ *%PREAMBLE% .*$>>"%CONDITIONS%"
+
 @call strlen.cmd "%PREAMBLE%" LENGTH >nul
 @set /a OFFSET=LENGTH+1
-@for /f "usebackq tokens=*" %%a in (`findstr /IRC:"^ *%PREAMBLE% *.*$" "%SOURCE%"`) do @(
+@for /f "usebackq tokens=*" %%a in (`findstr /IRG:"%CONDITIONS%" "%SOURCE%"`) do @(
     set HELP=%%a
     echo.!HELP:~%OFFSET%!
 )
+@del "%CONDITIONS%"
 @exit /b 0
 
 :OLD_VERSION
@@ -35,8 +43,8 @@
 $preamble = [System.Text.RegularExpressions.Regex]::Escape('%PREAMBLE%'); ^
 Get-Content -LiteralPath '%SOURCE%' -Encoding OEM ^| ^
 ForEach-Object { ^
-if ($_ -match """^^\s*$preamble( ?(?^<HelpMessage^>.*))""") { ^
-Write-Output $Matches['HelpMessage'] ^
+if ($_ -match """^^\s*$preamble( (?^<HelpMessage^>.*))?$""") { ^
+Write-Output ('{0}' -f $Matches['HelpMessage']) ^
 } ^
 }
 :: don't use `ps.cmd` because response speed is priority.
