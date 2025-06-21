@@ -1,18 +1,18 @@
-@rem -------------------------------------------------------------------------------
-@rem Batch Script Help Part Displayer
-@rem -------------------------------------------------------------------------------
-@rem usage:
-@rem     bshelp[.cmd] source [preamble]
-@rem arguments:
-@rem     source:
-@rem         batch script file path.
-@rem     preamble:
-@rem         help row preamble. (default `rem`)
+::? -------------------------------------------------------------------------------
+::? Batch Script Help Part Displayer
+::? -------------------------------------------------------------------------------
+::? usage:
+::?     bshelp[.cmd] source [preamble]
+::? arguments:
+::?     source:
+::?         batch script file path.
+::?     preamble:
+::?         help row preamble. (default `rem`)
 
 @setlocal
 
 @set SOURCE=%~1
-@if not defined SOURCE call "%~f0" "%~f0" "@rem" & exit /b 1
+@if not defined SOURCE call "%~f0" "%~f0" "::?" & exit /b 1
 
 @set PREAMBLE=%~2
 @if not defined PREAMBLE set PREAMBLE=rem
