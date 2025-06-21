@@ -10,6 +10,10 @@
 ::?     echo %LEN%
 
 @setlocal EnableDelayedExpansion
+
+@set STRING=%1
+@if not defined STRING call bshelp.cmd "%~f0" "::?" & exit /b 1
+
 @set LENGTH=0
 @set STRING=%~1
 @if not defined STRING goto PUT_RESULT
