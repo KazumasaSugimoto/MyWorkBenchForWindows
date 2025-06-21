@@ -9,13 +9,27 @@
 ::?     preamble:
 ::?         help row preamble. (default `rem`)
 
-@setlocal
+@setlocal EnableDelayedExpansion
 
 @set SOURCE=%~1
 @if not defined SOURCE call "%~f0" "%~f0" "::?" & exit /b 1
 
 @set PREAMBLE=%~2
 @if not defined PREAMBLE set PREAMBLE=rem
+
+@if defined USE_OLD_VERSION goto OLD_VERSION
+
+:NEW_VERSION
+
+@call strlen.cmd "%PREAMBLE%" LENGTH >nul
+@set /a OFFSET=LENGTH+1
+@for /f "usebackq tokens=*" %%a in (`findstr /IRC:"^ *%PREAMBLE% *.*$" "%SOURCE%"`) do @(
+    set HELP=%%a
+    echo.!HELP:~%OFFSET%!
+)
+@exit /b 0
+
+:OLD_VERSION
 
 @set PSCMD=^
 $preamble = [System.Text.RegularExpressions.Regex]::Escape('%PREAMBLE%'); ^
