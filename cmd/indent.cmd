@@ -6,7 +6,7 @@
 ::?       or
 ::?     indent[.cmd] length <"text-file-path"
 
-@if "%~1" equ "" exit /b 1
+@if "%~1" equ "" call bshelp.cmd "%~f0" "::?" & exit /b 1
 
 @setlocal
 
