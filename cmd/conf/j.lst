@@ -3,6 +3,7 @@
   self                  default         %MyScripts%
   ws                    default         %USERPROFILE%\workspaces
   trans                 default         https://translate.google.co.jp/?hl=ja
+  x                     default         https://www.google.com/search?q=google+translate
   sys                   default         sysdm.cpl
   env                   default         rundll32 sysdm.cpl,EditEnvironmentVariables
   office                default         https://portal.office.com/Home
