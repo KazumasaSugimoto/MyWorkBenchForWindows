@@ -13,15 +13,21 @@
 
 @set SOURCE=%~1
 @if not defined SOURCE call "%~f0" "%~f0" "::?" & exit /b 1
+@if exist "%SOURCE%" goto SOURCE_DETERMINED
 
-@set PREAMBLE=%~2
-@if not defined PREAMBLE set PREAMBLE=rem
+@echo "%SOURCE%" not found.>&2
+@exit /b 1
+
+:SOURCE_DETERMINED
 
 @call :IS_BATCH_FILE "%SOURCE%"
 @if ERRORLEVEL 1 (
     echo "%SOURCE%" is not batch file.>&2
     exit /b 1
 )
+
+@set PREAMBLE=%~2
+@if not defined PREAMBLE set PREAMBLE=rem
 
 @if defined USE_OLD_VERSION goto OLD_VERSION
 
