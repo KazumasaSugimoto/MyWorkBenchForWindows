@@ -2,9 +2,9 @@
 ::? Local L[ax|oose] Unique ID (nearly timestamp)
 ::? -------------------------------------------------------------------------------
 ::? usage:
-::?     lluid[.cmd] [retvar]
-::? format:
-::?     yyyymmdd.hhmmss.ff.nnnnn 
+::?     lluid[.cmd] [retvar-name]
+::? id format:
+::?     yyyymmdd.hhmmss.ff.nnnnn
 ::? example:
 ::?     lluid
 ::?       or
