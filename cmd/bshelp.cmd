@@ -15,7 +15,12 @@
 @if not defined SOURCE call "%~f0" "%~f0" "::?" & exit /b 1
 @if exist "%SOURCE%" goto SOURCE_DETERMINED
 
-@echo "%SOURCE%" not found.>&2
+@set SOURCE=%~$PATH:1
+@if exist "%SOURCE%" goto SOURCE_DETERMINED
+
+@for /f "usebackq tokens=*" %%a in (`where %1 2^>nul`) do @((set SOURCE=%%a) & goto SOURCE_DETERMINED)
+
+@echo "%~1" not found.>&2
 @exit /b 1
 
 :SOURCE_DETERMINED
