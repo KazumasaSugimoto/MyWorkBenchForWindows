@@ -2,12 +2,15 @@
 ::? String Length
 ::? -------------------------------------------------------------------------------
 ::? usage:
-::?     strlen[.cmd] string [retvar]
+::?     strlen[.cmd] string [retvar-name]
 ::? example:
 ::?     strlen "abc"
 ::?       or
 ::?     strlen "abc" LEN >nul
 ::?     echo %LEN%
+::? other method:
+::?     powershell -NoProfile -Command '%~1'.Length
+::?     ... simple, but slow.
 
 @setlocal EnableDelayedExpansion
 
