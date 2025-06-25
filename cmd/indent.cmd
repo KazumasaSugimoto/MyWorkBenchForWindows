@@ -2,25 +2,28 @@
 ::? Indent
 ::? -------------------------------------------------------------------------------
 ::? usage:
-::?     other command's stdout | indent[.cmd] length
+::?     other command's stdout | indent[.cmd] depth
 ::?       or
-::?     indent[.cmd] length <"text-file-path"
+::?     indent[.cmd] depth <"text-file-path"
+::? arguments:
+::?     depth:
+::?         indent length. (byte)
 
 @if "%~1" equ "" call bshelp.cmd "%~f0" "::?" & exit /b 1
 
 @setlocal
 
-@set LENGTH=%~1
-@set /a LENGTH+=0
+@set DEPTH=%~1
+@set /a DEPTH+=0
 
 @call lluid.cmd LLUID >nul
-@set TEMP_FILE_PATH=%TEMP%\%~nx0.LLUID.tmp
+@set TEMP_FILE_PATH=%TEMP%\%~nx0.%LLUID%.tmp
 
 @findstr /R ".*" >"%TEMP_FILE_PATH%"
 
 @set PSCMD=^
 Get-Content -LiteralPath '%TEMP_FILE_PATH%' -Encoding OEM ^| ^
-ForEach-Object { ('{0,%LENGTH%}{1}' -f '', $_) }
+ForEach-Object { ('{0,%DEPTH%}{1}' -f '', $_) }
 @powershell -NoProfile -Command "%PSCMD%"
 
 @del "%TEMP_FILE_PATH%"
