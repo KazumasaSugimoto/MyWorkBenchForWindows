@@ -23,7 +23,7 @@
 
 :CHECK_NEXT_CHAR
 
-@if "!STRING:~%LENGTH%!" equ "" goto PUT_RESULT
+@if "!STRING:~%LENGTH%,1!" equ "" goto PUT_RESULT
 @set /a LENGTH+=1
 @goto CHECK_NEXT_CHAR
 
