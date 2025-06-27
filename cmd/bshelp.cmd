@@ -2,12 +2,13 @@
 ::? Batch Script Help Part Displayer
 ::? -------------------------------------------------------------------------------
 ::? usage:
-::?     bshelp[.cmd] source [preamble]
+::?     bshelp[.cmd] source [preamble ...]
 ::? arguments:
 ::?     source:
 ::?         batch script file path.
 ::?     preamble:
-::?         help row preamble. (default `rem`)
+::?         help row preamble. multiple possible.
+::?         (default `rem` and `::?`. in the future, plan to only use '::?'.)
 
 @setlocal EnableDelayedExpansion
 
@@ -32,9 +33,15 @@
 )
 
 @set PREAMBLE=%~2
-@if not defined PREAMBLE set PREAMBLE=rem
+@if not defined PREAMBLE call "%~f0" "%SOURCE%" "rem" "::?" & exit /b 0
 
-@if defined USE_OLD_VERSION goto OLD_VERSION
+:PREAMBLE_DETERMINED
+
+@if defined USE_OLD_VERSION (call :OLD_VERSION) else (call :NEW_VERSION)
+@shift /2
+@set PREAMBLE=%~2
+@if defined PREAMBLE goto PREAMBLE_DETERMINED
+@exit /b 0
 
 :NEW_VERSION
 
