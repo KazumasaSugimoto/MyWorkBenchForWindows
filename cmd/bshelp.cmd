@@ -6,14 +6,15 @@
 ::? arguments:
 ::?     source:
 ::?         batch script file path.
-::?     preamble:
+::?     preamble[s]:
 ::?         help row preamble. multiple possible.
-::?         (default `rem` and `::?`. in the future, plan to only use '::?'.)
+::?         (default `rem` and `::?`. but in the future, plan to only use `::?`.)
 
 @setlocal EnableDelayedExpansion
 
+@set ME=%~f0
 @set SOURCE=%~1
-@if not defined SOURCE call "%~f0" "%~f0" "::?" & exit /b 1
+@if not defined SOURCE call "%ME%" "%ME%" "::?" & exit /b 1
 @if exist "%SOURCE%" goto SOURCE_DETERMINED
 
 @set SOURCE=%~$PATH:1
@@ -33,7 +34,7 @@
 )
 
 @set PREAMBLE=%~2
-@if not defined PREAMBLE call "%~f0" "%SOURCE%" "rem" "::?" & exit /b 0
+@if not defined PREAMBLE call "%ME%" "%SOURCE%" "rem" "::?" & exit /b 0
 
 :PREAMBLE_DETERMINED
 
