@@ -31,4 +31,5 @@ git config list --global |
             }
         }
     } |
+    Sort-Object Alias |
     Format-Table -Wrap
