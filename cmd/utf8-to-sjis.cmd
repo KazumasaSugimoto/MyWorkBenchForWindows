@@ -3,6 +3,25 @@
 ::? -------------------------------------------------------------------------------
 ::? usage:
 ::?		other command's stdout | utf8-to-sjis[.cmd]
+
+:TRY_PLAN_A
+
+@where iconv >nul 2>&1
+@if ERRORLEVEL 1 goto TRY_PLAN_B
+
+@iconv -f UTF-8 -t SJIS
+@exit /b %ERRORLEVEL%
+
+:TRY_PLAN_B
+
+@where busybox >nul 2>&1
+@if ERRORLEVEL 1 goto TRY_PLAN_C
+
+@busybox iconv -f UTF-8 -t SJIS
+@exit /b %ERRORLEVEL%
+
+:TRY_PLAN_C
+
 @setlocal
 @call lluid.cmd LLUID >nul
 @set TEMP_FILE_PATH=%TEMP%\%~nx0.%LLUID%.tmp
