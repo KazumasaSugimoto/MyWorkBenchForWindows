@@ -2,7 +2,7 @@
 ::? Find Git Objects
 ::? -------------------------------------------------------------------------------
 ::? usage:
-::?		fgo[.cmd] [search-word]
+::?     fgo[.cmd] [search-word]
 
 @echo off
 setlocal EnableDelayedExpansion
@@ -17,4 +17,3 @@ for /f "usebackq tokens=*" %%a in (`%GITCMD1% ^| %GITCMD2% ^| utf8-to-sjis.cmd ^
     set RESULT=%%a
     echo !RESULT:^|=%TAB%!
 )
-
