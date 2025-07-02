@@ -2,7 +2,9 @@
 ::? UTF-8 to Shift JIS
 ::? -------------------------------------------------------------------------------
 ::? usage:
-::?     other command's stdout | utf8-to-sjis[.cmd]
+::?     other command's stdout | utf8-to-sjis[.cmd] [--ignore-bom]
+
+@if /i "%~1" equ "--ignore-bom" goto TRY_PLAN_C
 
 :TRY_PLAN_A
 
