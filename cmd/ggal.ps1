@@ -11,8 +11,8 @@ param (
     $Content = ''
 )
 
-if ($Alias   -eq '') { $Alias   = '\w+' } else { $Alias   = $Alias.Replace('*', '\w*')  }
-if ($Content -eq '') { $Content = '.*'  } else { $Content = $Content.Replace('*', '.*') }
+if ($Alias   -eq '') { $Alias   = '[\w-]+' } else { $Alias   = $Alias.Replace('*', '[\w-]*') }
+if ($Content -eq '') { $Content = '.*'     } else { $Content = $Content.Replace('*', '.*')   }
 
 # git config --list --global |
 git config list --global |
