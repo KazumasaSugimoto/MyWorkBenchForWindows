@@ -2,7 +2,7 @@
 ::? UTF-8 to Shift JIS
 ::? -------------------------------------------------------------------------------
 ::? usage:
-::?		other command's stdout | utf8-to-sjis[.cmd]
+::?     other command's stdout | utf8-to-sjis[.cmd]
 
 :TRY_PLAN_A
 
@@ -30,4 +30,3 @@
 @set PS_RESULT=%ERRORLEVEL%
 @del "%TEMP_FILE_PATH%"
 @endlocal & exit /b %PS_RESULT%
-
