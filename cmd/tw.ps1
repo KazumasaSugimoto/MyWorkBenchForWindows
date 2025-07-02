@@ -10,7 +10,7 @@ param
     [String]
     $Encoding = 'OEM',
     [switch]
-    $DoNotUseTabs
+    $AllowTabs
 )
 
 $byteReadOption = Get-MyPSByteOption
@@ -72,7 +72,7 @@ foreach ($textRow in $textRows)
         }
     }
     # check for don't use tabs.
-    if ($DoNotUseTabs -and $textRow -like "*`t*")
+    if (-not $AllowTabs -and $textRow -like "*`t*")
     {
         [PSCustomObject]@{
             Line = $rowNum
