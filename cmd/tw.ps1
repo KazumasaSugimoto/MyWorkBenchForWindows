@@ -10,7 +10,9 @@ param
     [String]
     $Encoding = 'OEM',
     [switch]
-    $AllowTabs
+    $AllowTabs,
+    [switch]
+    $AllowTailBlankLine
 )
 
 $byteReadOption = Get-MyPSByteOption
@@ -104,6 +106,15 @@ foreach ($textRow in $textRows)
         }
     }
     $prevRow = $textRow
+}
+
+# check tail blank line.
+if (-not $AllowTailBlankLine -and [String]::IsNullOrWhiteSpace($prevRow))
+{
+    [PSCustomObject]@{
+        Line = $rowNum
+        Warning = 'blank line at tail.'
+    }
 }
 
 # check before EOF.
