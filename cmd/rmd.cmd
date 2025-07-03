@@ -64,7 +64,7 @@ if defined NOPAUSE_MODE goto DO_MAIN
 :CONFIRM
 
 echo.
-echo %MODE_CAPTION_FOR_CONFIRM% following: 
+echo %MODE_CAPTION_FOR_CONFIRM% following:
 echo     %TARGET_PATH%
 pause
 echo.
