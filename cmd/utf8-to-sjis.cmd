@@ -29,6 +29,6 @@
 @set TEMP_FILE_PATH=%TEMP%\%~nx0.%LLUID%.tmp
 @findstr /R ".*" >"%TEMP_FILE_PATH%"
 @powershell -NoProfile -Command "Get-Content -LiteralPath '%TEMP_FILE_PATH%' -Encoding UTF8"
-@set PS_RESULT=%ERRORLEVEL%
+@set PS_ERRORLEVEL=%ERRORLEVEL%
 @del "%TEMP_FILE_PATH%"
-@endlocal & exit /b %PS_RESULT%
+@endlocal & exit /b %PS_ERRORLEVEL%
