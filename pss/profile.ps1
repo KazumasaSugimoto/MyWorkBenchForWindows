@@ -1,8 +1,8 @@
-function prompt
-{
-#   "PS $($executionContext.SessionState.Path.CurrentLocation)$('>' * ($nestedPromptLevel + 1)) ";
-    "PS $($executionContext.SessionState.Path.CurrentLocation)`n> ";
-}
+### function prompt
+### {
+### #   "PS $($executionContext.SessionState.Path.CurrentLocation)$('>' * ($nestedPromptLevel + 1)) ";
+###     "PS $($executionContext.SessionState.Path.CurrentLocation)`n> ";
+### }
 
 function Get-MyPSVersionString
 {
@@ -16,6 +16,88 @@ function Get-MyPSVersionString
 function Get-MyPSVersionIndex
 {
     if ($PSVersionTable.PSVersion.Major -le 5) { return 0 } else { return 1 }
+}
+
+function Set-MyPSPrompt
+{
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $ThemeName
+    )
+
+    $shellName = @(
+        'powershell'    # v5
+        'pwsh'          # v7
+    )[(Get-MyPSVersionIndex)]
+
+    where.exe oh-my-posh.exe >$null 2>&1
+
+    if (-not $? -or [String]::IsNullOrWhiteSpace($ThemeName))
+    {
+        Write-Host "$shellName prompt changed to my command-prompt(cmd.exe) style."
+        'function Global:prompt { "PS $($executionContext.SessionState.Path.CurrentLocation)`n> " }' |
+            Invoke-Expression
+        return
+    }
+
+    $showThemes =
+    {
+        param
+        (
+            [Parameter(Position=0)]
+            [String]
+            $NameFilter = '*'
+        )
+
+        $hitCount = 0
+        Get-ChildItem "$env:POSH_THEMES_PATH" -Filter "$NameFilter.omp.json" |
+            ForEach-Object {
+                [PSCustomObject]@{
+                    Name = $_.Name.Replace('.omp.json', '')
+                }
+                $hitCount++
+            } |
+            Format-Wide -Column 4
+
+        if ($NameFilter -ne '*' -and $hitCount -eq 0)
+        {
+            $showThemes.Invoke('*')
+            return
+        }
+        Write-Host 'usage:'
+        Write-Host '    Set-MyPSPrompt [ theme-name ]'
+    }
+
+    $ompThemeFilePathCandidates = @(
+        $ThemeName
+        "$ThemeName.json"
+        "$env:POSH_THEMES_PATH$ThemeName"
+        "$env:POSH_THEMES_PATH$ThemeName.json"
+        "$env:POSH_THEMES_PATH$ThemeName.omp.json"
+    )
+
+    if ($ThemeName.Contains('*') -or $ThemeName.Contains('?'))
+    {
+        $showThemes.Invoke($ThemeName)
+        return
+    }
+
+    foreach ($ompThemeFilePath in $ompThemeFilePathCandidates)
+    {
+        Get-Item -LiteralPath $ompThemeFilePath >$null 2>&1
+        if ($?)
+        {
+            Write-Host "$shellName prompt changed by 'Oh My Posh'."
+            Write-Host "used theme file: $ompThemeFilePath"
+            oh-my-posh init $shellName --config $ompThemeFilePath |
+                Invoke-Expression
+            return
+        }
+    }
+
+    $showThemes.Invoke("*$ThemeName*")
 }
 
 function Move-MyPSCurrentDirectory
@@ -209,6 +291,7 @@ function Get-MyPSFolderInfo
         FoldersCount = 0
         Size = 0
         Depth = $Depth
+        ReparsePoints = [System.Collections.Generic.List[String]]::new()
         Exceptions = [System.Collections.Generic.List[String]]::new()
         ProcTime = [PSCustomObject]@{
             Begin = [System.DateTime]::Now
@@ -216,37 +299,45 @@ function Get-MyPSFolderInfo
         }
     }
 
-    try
+    if ($folderInfo.Attributes -band [System.IO.FileAttributes]::ReparsePoint)
     {
-        $folderInfo.GetFiles() |
-            ForEach-Object {
-                $myPSNotes.FilesCount++
-                $myPSNotes.Size += $_.Length
-            }
+        $myPSNotes.ReparsePoints.Add($FolderPath)
     }
-    catch
+    else
     {
-        $myPSNotes.Exceptions.Add($_)
-    }
-
-    try
-    {
-        $folderInfo.GetDirectories() |
-            ForEach-Object {
-                $myPSNotes.FoldersCount++
-                $subFolderInfo = Get-MyPSFolderInfo -FolderPath $_.FullName -Depth ($Depth + 1)
-                $myPSNotes.FilesCount += $subFolderInfo.MyPSNotes.FilesCount
-                $myPSNotes.FoldersCount += $subFolderInfo.MyPSNotes.FoldersCount
-                $myPSNotes.Size += $subFolderInfo.MyPSNotes.Size
-                if ($myPSNotes.Depth -lt $subFolderInfo.MyPSNotes.Depth) {
-                    $myPSNotes.Depth = $subFolderInfo.MyPSNotes.Depth
+        try
+        {
+            $folderInfo.GetFiles() |
+                ForEach-Object {
+                    $myPSNotes.FilesCount++
+                    $myPSNotes.Size += $_.Length
                 }
-                $myPSNotes.Exceptions.AddRange($subFolderInfo.MyPSNotes.Exceptions)
-            }
-    }
-    catch
-    {
-        $myPSNotes.Exceptions.Add($_)
+        }
+        catch
+        {
+            $myPSNotes.Exceptions.Add("$FolderPath`t$_")
+        }
+
+        try
+        {
+            $folderInfo.GetDirectories() |
+                ForEach-Object {
+                    $myPSNotes.FoldersCount++
+                    $subFolderInfo = Get-MyPSFolderInfo -FolderPath $_.FullName -Depth ($Depth + 1)
+                    $myPSNotes.FilesCount += $subFolderInfo.MyPSNotes.FilesCount
+                    $myPSNotes.FoldersCount += $subFolderInfo.MyPSNotes.FoldersCount
+                    $myPSNotes.Size += $subFolderInfo.MyPSNotes.Size
+                    if ($myPSNotes.Depth -lt $subFolderInfo.MyPSNotes.Depth) {
+                        $myPSNotes.Depth = $subFolderInfo.MyPSNotes.Depth
+                    }
+                    $myPSNotes.ReparsePoints.AddRange($subFolderInfo.MyPSNotes.ReparsePoints)
+                    $myPSNotes.Exceptions.AddRange($subFolderInfo.MyPSNotes.Exceptions)
+                }
+        }
+        catch
+        {
+            $myPSNotes.Exceptions.Add("$FolderPath`t$_")
+        }
     }
 
     $myPSNotes.ProcTime.End = [System.DateTime]::Now
@@ -499,6 +590,95 @@ function Get-MyPSPathLengthWarning
     }
 }
 
+function Get-MyPSPathCharWarning
+{
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $BaseFolderPath = '.',
+        [String]
+        $Encoding = 'shift_jis'
+    )
+
+    $textCodec = [Text.Encoding]::GetEncoding($Encoding)
+
+    Get-ChildItem -LiteralPath $BaseFolderPath -Recurse -Force |
+        ForEach-Object {
+            $bytes = $textCodec.GetBytes($_.Name)
+            $chars = $textCodec.GetString($bytes, 0, $bytes.Length)
+            if ($_.Name -ne $chars)
+            {
+                Write-Output ('{0} -> {1}' -f $_.FullName, $chars)
+            }
+        }
+}
+
+function Rename-MyPSChildItem
+{
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $BaseFolderPath = '.',
+        [String]
+        $Encoding = 'shift_jis',
+        [switch]
+        $ToCode,
+        [switch]
+        $Commit
+    )
+
+    $textCodec = [Text.Encoding]::GetEncoding($Encoding)
+
+    Get-ChildItem -LiteralPath $BaseFolderPath -Recurse -Force |
+        ForEach-Object {
+            if ($ToCode)
+            {
+                $bytes = $textCodec.GetBytes($_.Name)
+                $chars = $textCodec.GetString($bytes, 0, $bytes.Length)
+                if ($_.Name -ne $chars)
+                {
+                    $safeName = ''
+                    foreach ($srcChar in $_.Name.ToCharArray())
+                    {
+                        $bytes = $textCodec.GetBytes($srcChar)
+                        $dstChar = $textCodec.GetString($bytes, 0, $bytes.Length)
+                        if ($srcChar -eq $dstChar)
+                        {
+                            $safeName += $srcChar
+                            continue
+                        }
+                        $srcCharCode = [UInt16]$srcChar
+                        $safeName += '(U+{0:X4})' -f $srcCharCode
+                    }
+                    Write-Output ('{0} -> {1}' -f $_.FullName, $safeName)
+                    if ($Commit)
+                    {
+                        Rename-Item -LiteralPath $_.FullName -NewName $safeName
+                    }
+                }
+            }
+            else
+            {
+                $utf16Name = $_.Name
+                while ($utf16Name -match '^(?<Head>.*)(\(U\+(?<Unicode>[0-9A-F]{4})\))(?<Tail>.*)$')
+                {
+                    $utf16CharCode = [Convert]::ToUInt16($Matches.Unicode, 16)
+                    $utf16Name = $Matches.Head + [char]$utf16CharCode + $Matches.Tail
+                }
+                if ($_.Name -ne $utf16Name)
+                {
+                    Write-Output ('{0} -> {1}' -f $_.FullName, $utf16Name)
+                    if ($Commit)
+                    {
+                        Rename-Item -LiteralPath $_.FullName -NewName $utf16Name
+                    }
+                }
+            }
+        }
+}
+
 function Get-MyPSLeafFolders
 {
     param
@@ -549,6 +729,7 @@ function Get-MyPSEmptyFolders
 }
 
 Set-Alias -Name ver     -Value Get-MyPSVersionString
+Set-Alias -Name pp      -Value Set-MyPSPrompt
 Set-Alias -Name pd      -Value Move-MyPSCurrentDirectory
 Set-Alias -Name syntax  -Value Get-MyPSCommandSyntax
 Set-Alias -Name src     -Value Get-MyPSScriptBlock
@@ -726,6 +907,50 @@ Update-TypeData @paramSet -MemberName CreateJunction -Value {
 
 $paramSet = @{
     TypeName    = 'System.IO.FileInfo'
+    MemberType  = 'ScriptProperty'
+}
+Update-TypeData @paramSet -MemberName 'ExtensionRemovedPath' -Value {
+    return $this.DirectoryName + '\' + $this.BaseName
+}
+
+Update-TypeData @paramSet -MemberName 'IsPossiblyBackup' -Value {
+
+    $tagPart  = '(?<TagPart>(bk|bak|bkup|backup)\.(v|ver|version))'
+    $datePart = '(?<DatePart>(?<Year>[0-9]{4})(?<Month>[0-9]{2})(?<Day>[0-9]{2}))'
+    $timePart = '(?<TimePart>(?<Hour>[0-9]{2})(?<Minute>[0-9]{2})(?<Second>[0-9]{2}))'
+    $hashPart = '(?<HashPart>[0-9a-f]{40})'
+    $backupFileNamePattern = "^.+(\.$tagPart)(\.$datePart)(\.$timePart)(\.$hashPart)?"
+
+    if ($this.BaseName -notmatch $backupFileNamePattern) { return $false }
+
+    $year   = [int]::Parse($Matches.Year)
+    $month  = [int]::Parse($Matches.Month)
+    $day    = [int]::Parse($Matches.Day)
+    $hour   = [int]::Parse($Matches.Hour)
+    $minute = [int]::Parse($Matches.Minute)
+    $second = [int]::Parse($Matches.Second)
+<#
+    return (
+        $year   -in 1..9999 -and
+        $month  -in 1..12 -and
+        $day    -in 1..31 -and
+        $hour   -in 0..23 -and
+        $minute -in 0..59 -and
+        $second -in 0..59)
+#>
+    try
+    {
+        [void][System.DateTime]::new($year, $month, $day, $hour, $minute, $second)
+        return $true
+    }
+    catch
+    {
+        return $false
+    }
+}
+
+$paramSet = @{
+    TypeName    = 'System.IO.FileInfo'
     MemberType  = 'ScriptMethod'
 }
 Update-TypeData @paramSet -MemberName GetHeadBytes -Value {
@@ -804,6 +1029,91 @@ Update-TypeData @paramSet -MemberName GetFileHash -Value {
     }
 }
 
+Update-TypeData @paramSet -MemberName GetBackupName -Value {
+    param
+    (
+        [Parameter(Position=0)]
+        [bool]
+        $WithGitHash = $false
+    )
+
+    $backupBaseName = $this.BaseName
+    $backupBaseName += ('.bk.ver.{0}' -f $this.LastWriteTime.ToString('yyyyMMdd.HHmmss'))
+
+    if ($WithGitHash)
+    {
+        $gitHash = $this.GetFileHash('Git')
+        $backupBaseName += ('.{0}' -f $gitHash.Hash.ToLower())
+    }
+
+    return $backupBaseName + $this.Extension
+}
+
+Update-TypeData @paramSet -MemberName Backup -Value {
+    param
+    (
+        [Parameter(Position=0)]
+        [String]
+        $SubFolderPath = '',
+        [Parameter(Position=1)]
+        [bool]
+        $WithGitHash = $false,
+        [Parameter(Position=2)]
+        [bool]
+        $SilentMode = $false
+    )
+
+    if ($this.IsPossiblyBackup)
+    {
+        if (-not $SilentMode) { Write-Host ('{0} is possibly backup, so cancelled.' -f $this.Name) }
+        return $false
+    }
+
+    $backupFolderPath = Join-Path -Path $this.DirectoryName -ChildPath $SubFolderPath
+    $backupFolderPath = Join-Path -Path $backupFolderPath -ChildPath ''
+
+    $backupName = $this.GetBackupName($WithGitHash)
+    $backupFilePath = Join-Path -Path $backupFolderPath -ChildPath $backupName
+    $backupFile = [System.IO.FileInfo]::new($backupFilePath)
+
+    if (-not $SilentMode)
+    {
+        Write-Host ('{0} -> {1}' -f $this.Name, $backupName) -NoNewline
+    }
+
+    if ($backupFile.Exists)
+    {
+        if (-not $SilentMode) { Write-Host ' is already exist.' -NoNewline }
+        if ($this.Length -eq $backupFile.Length)
+        {
+            $currentHash = $this.GetFileHash('Git')
+            $backupHash = $backupFile.GetFileHash('Git')
+            if ($currentHash.Hash -eq $backupHash.Hash)
+            {
+                if (-not $SilentMode) { Write-Host '' }
+                return $true
+            }
+        }
+        if (-not $SilentMode) { Write-Host ' But not equals, backup cancelled.' }
+        return $false
+    }
+
+    if (-not $backupFile.Directory.Exists) { $backupFile.Directory.Create() }
+
+    try
+    {
+        [void]$this.CopyTo($backupFile.FullName)
+        if (-not $SilentMode) { Write-Host ' backup succeeded.' }
+        return $true
+    }
+    catch
+    {
+        if (-not $SilentMode) { Write-Host ' backup failed.' }
+        Write-Error $_.ToString()
+        return $false
+    }
+}
+
 $paramSet = @{
     TypeName    = @(
                     'Microsoft.Powershell.Utility.FileHash'         # v5
@@ -822,5 +1132,18 @@ Update-TypeData @paramSet -MemberType ScriptMethod -MemberName GetCaptionByBase6
 Update-TypeData @paramSet -MemberType ScriptMethod -MemberName GetCaptionWithBase64 -Value {
     return $this.Algorithm + ': ' + $this.Hash.ToLower() + ' ( ' + $this.Base64 + ' )'
 }
+
+Add-Type -AssemblyName System.Drawing
+
+$paramSet = @{
+    ReferencedAssemblies =
+        @(
+            'System.Drawing.dll'                # v5
+            'System.Drawing.Primitives.dll'     # v7
+        )[(Get-MyPSVersionIndex)]
+}
+
+Add-Type -LiteralPath "$($MyInvocation.MyCommand.DirectoryName)\Win32Api.cs" @paramSet
+### Add-Type -LiteralPath "$($MyInvocation.MyCommand.DirectoryName)\Win32Const.cs"
 
 Remove-Variable -Name paramSet
