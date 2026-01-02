@@ -46,6 +46,20 @@ $blue = """$esc[34m"""; ^
 $magenta = """$esc[35m"""; ^
 $cyan = """$esc[36m"""; ^
 $white = """$esc[37m"""; ^
-Write-Output ("""%~1""")
+$blackb = """$esc[40m"""; ^
+$redb = """$esc[41m"""; ^
+$greenb = """$esc[42m"""; ^
+$yellowb = """$esc[43m"""; ^
+$blueb = """$esc[44m"""; ^
+$magentab = """$esc[45m"""; ^
+$cyanb = """$esc[46m"""; ^
+$whiteb = """$esc[47m"""; ^
+Write-Output """%~1"""
+
+::- TBD: `-NoNewline` mode.
+::- TODO: cursor position control.
+::-     e.g.
+::-         $home = """$esc[1G"""
+::-         $up = """$esc[1A"""
 
 @powershell -NoProfile -Command "%PSCMD%"
