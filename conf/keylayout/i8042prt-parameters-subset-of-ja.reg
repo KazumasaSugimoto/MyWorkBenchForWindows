@@ -1,0 +1,7 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\i8042prt\Parameters]
+"LayerDriver JPN"="kbd106.dll"
+"OverrideKeyboardIdentifier"="PCAT_106KEY"
+"OverrideKeyboardType"=dword:00000007
+"OverrideKeyboardSubtype"=dword:00000002
